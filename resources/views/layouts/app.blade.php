@@ -28,7 +28,9 @@
 
   <!-- Template Main CSS File -->
   <link href="{{ asset('assets/css/style.css') }}" rel="stylesheet">
+  <link href="{{ asset('assets/css/main.css') }}" rel="stylesheet">
   <meta name="csrf-token" content="{{ csrf_token() }}">
+
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 
@@ -480,6 +482,7 @@
 
   <!-- Template Main JS File -->
   <script src="{{ asset('assets/js/main.js') }}"></script>
+  
   @stack('scripts')
 </body>
 

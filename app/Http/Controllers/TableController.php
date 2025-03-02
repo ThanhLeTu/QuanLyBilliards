@@ -5,23 +5,30 @@ namespace App\Http\Controllers;
 use App\Models\Table;
 use Illuminate\Http\Request;
 
-
 class TableController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\JsonResponse
-     */ 
+     */
     public function index()
     {
-        return view('tables.index'); 
+        return view('tables.index');
     }
+
+    /**
+     * Display a listing of the resource for dataTables.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function data()
-{
-    $tables = Table::all();
-    return response()->json($tables);
-}
+    {
+        $tables = Table::all();
+        return response()->json($tables);
+    }
+
+
     /**
      * Store a newly created resource in storage.
      *
@@ -30,16 +37,24 @@ class TableController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'table_number' => 'required|unique:tables',
-            'status' => 'required|in:available,occupied,unavailable',
-        ]);
+        try {
+            $request->validate([
+                'table_number' => 'required|unique:tables',
+                'status' => 'required|in:available,occupied,unavailable',
+                'area' => 'required',
+                'table_type' => 'required',
+                'price' => 'required|numeric|min:0',
+                'description' => 'nullable',
+            ]);
 
-        $table = Table::create($request->all());
-
-        return response()->json($table, 201); // 201 Created
+            $table = Table::create($request->all());
+            
+            return response()->json($table, 201);
+        } catch (\Exception $e) {
+            \Log::error("Lỗi khi tạo bàn: " . $e->getMessage() . "\n" . $e->getTraceAsString());
+            return response()->json(['message' => 'Có lỗi xảy ra khi thêm bàn!'], 500);
+        }
     }
-
     /**
      * Display the specified resource.
      *
@@ -63,6 +78,10 @@ class TableController extends Controller
         $request->validate([
             'table_number' => 'required|unique:tables,table_number,'.$table->id,
             'status' => 'required|in:available,occupied,unavailable',
+            'area' => 'required',
+            'table_type' => 'required',
+            'price' => 'required|numeric|min:0',
+            'description' => 'nullable',
         ]);
 
         $table->update($request->all());
@@ -80,6 +99,6 @@ class TableController extends Controller
     {
         $table->delete();
 
-        return response()->json(null, 204); // 204 No Content
+        return response()->json(null, 204);
     }
 }

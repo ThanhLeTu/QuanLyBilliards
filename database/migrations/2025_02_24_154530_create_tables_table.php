@@ -17,6 +17,10 @@ class CreateTablesTable extends Migration
             $table->id();
             $table->integer('table_number')->unique();
             $table->enum('status', ['available', 'occupied', 'unavailable'])->default('available');
+            $table->string('area');
+            $table->string('table_type');
+            $table->decimal('price', 10, 0);
+            $table->text('description')->nullable();
             $table->timestamps();
         });
     }
@@ -24,6 +28,7 @@ class CreateTablesTable extends Migration
     /**
      * Reverse the migrations.
      *
+     * 
      * @return void
      */
     public function down()

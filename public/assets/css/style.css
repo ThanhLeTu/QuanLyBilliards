@@ -1231,3 +1231,41 @@ h6 {
   font-size: 13px;
   color: #012970;
 }
+.area-map {
+  position: relative;
+  width: 800px; /* Điều chỉnh kích thước sơ đồ */
+  height: 600px; /* Điều chỉnh kích thước sơ đồ */
+  border: 1px solid #ccc;
+  margin: 20px auto;
+}
+
+.table-icon {
+  position: absolute;
+  cursor: pointer;
+  font-size: 2rem;
+  text-align: center;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: green; /* Màu mặc định cho bàn trống */
+}
+
+.table-icon .table-number {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.8rem;
+  color: #333;
+}
+
+.table-icon.occupied {
+  color: red; /* Màu cho bàn đang sử dụng */
+}
+
+.table-icon.unavailable {
+  color: gray; /* Màu cho bàn không khả dụng */
+}
