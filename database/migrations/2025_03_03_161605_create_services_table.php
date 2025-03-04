@@ -18,6 +18,8 @@ class CreateServicesTable extends Migration
             $table->string('name');
             $table->decimal('price', 10, 2);
             $table->text('description')->nullable();
+            $table->string('image')->nullable();
+            $table->enum('category', ['drink', 'food', 'other'])->default('other');
             $table->timestamps();
         });
     }

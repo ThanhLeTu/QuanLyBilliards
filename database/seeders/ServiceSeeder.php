@@ -15,6 +15,20 @@ class ServiceSeeder extends Seeder
     public function run()
     {
         Service::create([
+            'name' => 'Coca Cola',
+            'price' => 15000,
+            'category' => 'drink',
+            'description' => 'Nước giải khát có ga'
+        ]);
+
+        Service::create([
+            'name' => 'Mì xào',
+            'price' => 35000,
+            'category' => 'food',
+            'description' => 'Mì xào hải sản'
+        ]);
+
+        Service::create([
             'name' => 'Bia Hà Nội',
             'price' => 25000,
             'description' => 'Bia Hà Nội chai 330ml'

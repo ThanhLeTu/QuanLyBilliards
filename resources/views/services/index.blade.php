@@ -73,7 +73,10 @@
                     <label for="serviceImage">
                         <i class="fas fa-image"></i> Hình ảnh
                     </label>
-               
+                    <div class="image-upload-wrapper">
+                        <input type="file" id="serviceImage" name="image" class="form-control">
+                        <div class="image-preview"></div>
+                    </div>
                 </div>
 
                 <div class="form-actions">
@@ -92,115 +95,309 @@
     </div>
 </div>
 
-<style>
-.content-wrapper {
-    display: grid;
-    grid-template-columns: 1fr 400px;
-    gap: 24px;
-    padding: 20px;
-    height: calc(100vh - 180px);
+<style>* {
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.service-list-section,
-.service-form-section {
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+body {
+    background-color: #f5f5f5;
+    padding: 20px;
+}
+
+.parent {
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    grid-template-rows: 0.8fr repeat(6, 1fr);
+    grid-column-gap: 2px;
+    grid-row-gap: 1px;
+    height: 100vh;
+    max-width: 1200px;
+    margin: 0 auto;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
     overflow: hidden;
 }
 
-.section-header {
-    padding: 20px;
-    background: linear-gradient(to right, #2193b0, #6dd5ed);
-    color: white;
+.div1 {
+    grid-area: 1 / 1 / 8 / 7;
+    background-color: #eef6ff;
+    padding: 15px;
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
+}
+
+.div2 {
+    grid-area: 1 / 7 / 8 / 11;
+    background-color: #f0f8ff;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    border-left: 1px solid #ddd;
+}
+
+.div3 {
+    grid-area: 7 / 7 / 8 / 11;
+    background-color: #e6f3ff;
+    padding: 15px;
+    display: flex;
+    justify-content: space-around;
     align-items: center;
+    border-top: 1px solid #ddd;
 }
 
-.section-header h2 {
-    font-size: 1.25rem;
-    margin: 0;
+.div4 {
+    grid-area: 2 / 7 / 7 / 11;
+    background-color: #f0f8ff;
+    padding: 15px;
+    overflow-y: auto;
 }
 
-.view-controls {
-    display: flex;
-    gap: 8px;
+.div5 {
+    grid-area: 2 / 1 / 8 / 7;
+    background-color: #eef6ff;
+    padding: 15px;
+    overflow-y: auto;
 }
 
-.view-btn {
-    background: rgba(255, 255, 255, 0.2);
-    border: none;
-    color: white;
-    padding: 8px;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: all 0.3s ease;
+/* Tiêu đề */
+.header {
+    text-align: center;
+    padding: 10px;
+    margin-bottom: 15px;
+    color: #333;
+    font-size: 24px;
+    font-weight: bold;
+    background-color: #d4e9ff;
+    border-radius: 8px;
 }
 
-.view-btn.active,
-.view-btn:hover {
-    background: rgba(255, 255, 255, 0.4);
-}
-
+/* Danh sách dịch vụ - Cấu trúc grid với tối đa 5 hàng */
 .service-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 20px;
-    padding: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 15px;
+    padding: 15px;
+    max-height: calc(100% - 70px); /* Chiều cao tối đa để chứa 5 hàng và nút điều hướng */
+    overflow-x: auto;
+    scroll-behavior: smooth;
     overflow-y: auto;
     height: calc(100% - 70px);
+    scrollbar-width: thin;
 }
 
+.service-grid::-webkit-scrollbar {
+    width: 6px;
+}
+
+.service-grid::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+}
+
+.service-grid::-webkit-scrollbar-thumb {
+    background: #00b894;
+    border-radius: 3px;
+}
+
+/* Card dịch vụ */
 .service-card {
     background: white;
     border-radius: 10px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
     overflow: hidden;
-    transition: all 0.3s ease;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
     cursor: pointer;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    height: 280px;
+}
+
+.service-card.selected {
+    border: 2px solid #4285f4;
+    transform: translateY(-3px);
 }
 
 .service-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .service-image {
     width: 100%;
-    height: 160px;
+    height: 140px;
     object-fit: cover;
-}
-
-.service-info {
-    padding: 15px;
+    border-radius: 6px;
+    margin-bottom: 10px;
 }
 
 .service-name {
+    font-size: 1rem;
     font-weight: 600;
     color: #2d3436;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .service-price {
-    color: #00b894;
-    font-weight: 600;
     font-size: 1.1rem;
+    font-weight: 600;
+    color: #00b894;
+    margin-bottom: 6px;
 }
 
-.custom-form {
-    padding: 20px;
+/* Controls */
+.controls {
+    display: flex;
+    gap: 10px;
+    width: 100%;
 }
 
+.control-btn {
+    flex: 1;
+    padding: 10px;
+    background-color: #4285f4;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.control-btn.create {
+    background-color: #0f9d58;
+}
+
+.control-btn.edit {
+    background-color: #4285f4;
+}
+
+.control-btn.delete {
+    background-color: #db4437;
+}
+
+.control-btn:hover {
+    opacity: 0.9;
+}
+
+/* Form */
 .form-group {
     margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #555;
+}
+
+input, textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.file-input {
+    margin-top: 5px;
+}
+
+/* Scroll buttons */
+.scroll-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 15px;
+}
+
+.scroll-btn {
+    background-color: #4285f4;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 18px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.scroll-btn:hover {
+    background-color: #3367d6;
+}
+
+.content-wrapper {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 20px;
+    padding: 20px;
+    min-height: calc(100vh - 100px);
+    height: calc(100vh - 100px);
+}
+
+.service-list-section {
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    max-height: calc(100vh - 140px);
+}
+
+.service-info {
+    padding: 12px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.service-category {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #636e72;
+    font-size: 0.8rem;
+    margin-bottom: 6px;
+}
+
+.service-description {
+    font-size: 0.85rem;
+    color: #636e72;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    margin: 0;
+}
+
+.service-form-section {
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
+    padding: 20px;
+    position: sticky;
+    top: 20px;
 }
 
 .form-group label {
     display: block;
     margin-bottom: 8px;
-    color: #2d3436;
     font-weight: 500;
+    color: #2d3436;
 }
 
 .form-control {
@@ -212,76 +409,140 @@
 }
 
 .form-control:focus {
-    border-color: #2193b0;
-    box-shadow: 0 0 0 2px rgba(33, 147, 176, 0.2);
-}
-
-.image-upload-wrapper {
-    position: relative;
+    border-color: #00b894;
+    box-shadow: 0 0 0 2px rgba(0, 184, 148, 0.1);
+    outline: none;
 }
 
 .image-preview {
     margin-top: 10px;
     width: 100%;
-    height: 200px;
+    min-height: 200px;
     background: #f8f9fa;
     border-radius: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
-    overflow: hidden;
+    border: 2px dashed #dfe6e9;
 }
 
-.form-actions {
-    display: flex;
-    gap: 12px;
-    margin-top: 30px;
+.image-preview img {
+    border-radius: 8px;
 }
 
 .btn {
-    padding: 10px 20px;
+    padding: 12px 20px;
     border: none;
     border-radius: 8px;
-    color: white;
+    font-weight: 500;
     cursor: pointer;
     transition: all 0.3s ease;
-    display: flex;
+    display: inline-flex;
     align-items: center;
     gap: 8px;
 }
 
-.btn:hover {
+.btn-primary {
+    background: #00b894;
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #00a082;
     transform: translateY(-2px);
 }
 
-.btn:disabled {
-    opacity: 0.7;
-    cursor: not-allowed;
-    transform: none;
+.section-header {
+    padding: 15px 20px;
+    background: linear-gradient(135deg, #00b894 0%, #00d2a8 100%);
+    color: white;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 10;
 }
 
-.btn-primary {
-    background: #2193b0;
+.section-header h2 {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 600;
 }
 
-.btn-success {
-    background: #00b894;
+.no-data {
+    text-align: center;
+    padding: 40px;
+    color: #636e72;
+    font-size: 1.1rem;
 }
 
-.btn-danger {
-    background: #d63031;
+.view-controls {
+    display: flex;
+    gap: 8px;
+}
+
+.view-btn {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.view-btn:hover,
+.view-btn.active {
+    background: rgba(255, 255, 255, 0.4);
+}
+
+@media (max-width: 1200px) {
+    .service-grid {
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    }
+}
+
+@media (max-width: 1024px) {
+    .content-wrapper {
+        grid-template-columns: 1fr;
+    }
+
+    .service-form-section {
+        position: static;
+    }
+}
+
+@media (max-width: 768px) {
+    .content-wrapper {
+        grid-template-columns: 1fr;
+    }
+    
+    .service-list-section {
+        max-height: calc(100vh - 400px);
+    }
 }
 </style>
 @endsection
 
-@push('scripts')
-    <script>
-        var servicesIndexRoute = "{{ route('services.data') }}";
-        var servicesStoreRoute = "{{ route('services.store') }}";
-        var servicesShowRoute = "{{ route('services.show', ':id') }}";
-        var servicesUpdateRoute = "{{ route('services.update', ':id') }}";
-        var servicesDestroyRoute = "{{ route('services.destroy', ':id') }}";
-    </script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="{{ asset('assets/js/services.js') }}"></script>
+@push('styles')
+<link href="{{ asset('assets/css/services.css') }}" rel="stylesheet">
 @endpush
+
+@push('scripts')
+<script>
+    // Define routes exactly like in tables
+    const servicesDataRoute = "{{ route('services.data') }}";
+    const servicesStoreRoute = "{{ route('services.store') }}";
+    const servicesShowRoute = "{{ route('services.show', ':id') }}";
+    const servicesUpdateRoute = "{{ route('services.update', ':id') }}";
+    const servicesDestroyRoute = "{{ route('services.destroy', ':id') }}";
+</script>
+<script src="{{ asset('assets/js/services.js') }}"></script>
+@endpush
+
