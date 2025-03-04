@@ -54,6 +54,114 @@ $(document).ready(function() {
         });
     });
 
+    let selectedServiceId = null;
+
+    // Xử lý khi click vào service card
+    $(document).on('click', '.service-card', function() {
+        const serviceId = $(this).data('id');
+        selectedServiceId = serviceId;
+        
+        // Xóa class selected từ tất cả các card
+        $('.service-card').removeClass('selected');
+        // Thêm class selected vào card được chọn
+        $(this).addClass('selected');
+        
+        // Lấy thông tin dịch vụ để điền vào form
+        $.ajax({
+            url: servicesShowRoute.replace(':id', serviceId),
+            type: 'GET',
+            success: function(service) {
+                // Điền thông tin vào form
+                $('#serviceName').val(service.name);
+                $('#servicePrice').val(service.price);
+                $('#serviceCategory').val(service.category);
+                $('#serviceDescription').val(service.description);
+                
+                // Hiển thị hình ảnh nếu có
+                if (service.image) {
+                    $('.image-preview').html(`
+                        <img src="/storage/services/${service.image}" 
+                             alt="Preview" 
+                             style="max-width: 100%; max-height: 200px;">
+                    `);
+                }
+
+                // Enable các nút sửa và xóa
+                $('#editServiceBtn').prop('disabled', false);
+                $('#deleteServiceBtn').prop('disabled', false);
+                // Disable nút thêm mới
+                $('#addServiceBtn').prop('disabled', true);
+            },
+            error: function(xhr) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Lỗi!',
+                    text: 'Không thể tải thông tin dịch vụ'
+                });
+            }
+        });
+    });
+
+    // Xử lý khi click nút Cập nhật
+    $('#editServiceBtn').click(function() {
+        if (!selectedServiceId) return;
+
+        const formData = new FormData($('#serviceForm')[0]);
+        
+        $.ajax({
+            url: servicesUpdateRoute.replace(':id', selectedServiceId),
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            headers: {
+                'X-HTTP-Method-Override': 'PUT'
+            },
+            success: function(response) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Thành công!',
+                    text: 'Đã cập nhật dịch vụ'
+                }).then(() => {
+                    // Reset form và các trạng thái
+                    resetForm();
+                    // Tải lại danh sách dịch vụ
+                    loadServices();
+                });
+            },
+            error: function(xhr) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Lỗi!',
+                    text: 'Không thể cập nhật dịch vụ'
+                });
+                console.error(xhr.responseText);
+            }
+        });
+    });
+
+    // Hàm reset form và trạng thái
+    function resetForm() {
+        $('#serviceForm')[0].reset();
+        $('.image-preview').empty();
+        selectedServiceId = null;
+        $('.service-card').removeClass('selected');
+        $('#editServiceBtn').prop('disabled', true);
+        $('#deleteServiceBtn').prop('disabled', true);
+        $('#addServiceBtn').prop('disabled', false);
+    }
+
+    // Thêm nút Reset để hủy chọn
+    $('#serviceForm').append(`
+        <button type="button" class="btn btn-secondary" id="resetBtn">
+            <i class="fas fa-undo"></i> Làm mới
+        </button>
+    `);
+
+    $('#resetBtn').click(function() {
+        resetForm();
+    });
+
     // Hàm tải danh sách dịch vụ
     function loadServices() {
         $.ajax({

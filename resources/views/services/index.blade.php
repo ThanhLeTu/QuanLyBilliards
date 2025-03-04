@@ -219,8 +219,9 @@ body {
 }
 
 .service-card.selected {
-    border: 2px solid #4285f4;
+    border: 2px solid #00b894;
     transform: translateY(-3px);
+    box-shadow: 0 4px 15px rgba(0, 184, 148, 0.2);
 }
 
 .service-card:hover {
@@ -450,6 +451,22 @@ input, textarea {
 .btn-primary:hover {
     background: #00a082;
     transform: translateY(-2px);
+}
+
+.btn-secondary {
+    background: #636e72;
+    color: white;
+    margin-left: 10px;
+}
+
+.btn-secondary:hover {
+    background: #555a5e;
+}
+
+.btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none !important;
 }
 
 .section-header {
