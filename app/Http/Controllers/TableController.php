@@ -14,8 +14,10 @@ class TableController extends Controller
      */
     public function index()
     {
-        return view('tables.index');
+        $tables = Table::all(); // Lấy danh sách bàn từ database
+        return view('tables.index', compact('tables')); // Truyền biến $tables vào view
     }
+    
 
     /**
      * Display a listing of the resource for dataTables.
@@ -51,7 +53,7 @@ class TableController extends Controller
             
             return response()->json($table, 201);
         } catch (\Exception $e) {
-            \Log::error("Lỗi khi tạo bàn: " . $e->getMessage() . "\n" . $e->getTraceAsString());
+            Log::error("Lỗi khi tạo bàn: " . $e->getMessage() . "\n" . $e->getTraceAsString());
             return response()->json(['message' => 'Có lỗi xảy ra khi thêm bàn!'], 500);
         }
     }
