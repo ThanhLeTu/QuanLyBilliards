@@ -543,7 +543,7 @@ input, textarea {
     .service-list-section {
         max-height: calc(100vh - 400px);
     }
-}
+}}
 </style>
 @endsection
 
@@ -559,6 +559,7 @@ input, textarea {
     const servicesShowRoute = "{{ route('services.show', ':id') }}";
     const servicesUpdateRoute = "{{ route('services.update', ':id') }}";
     const servicesDestroyRoute = "{{ route('services.destroy', ':id') }}";
+
 </script>
 <script src="{{ asset('assets/js/services.js') }}"></script>
 @endpush

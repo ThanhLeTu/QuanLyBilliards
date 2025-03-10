@@ -291,7 +291,11 @@
           </li>
         </ul>
       </li><!-- End Components Nav -->
-
+      <li class="nav-item">
+        <a class="nav-link" href="{{ route('services.index') }}">
+          <i class="bi bi-menu-button-wide"></i><span>Quản lý dịch vụ</span>
+        </a>
+      </li>
       <li class="nav-item">
         <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
           <i class="bi bi-journal-text"></i><span>Forms</span><i class="bi bi-chevron-down ms-auto"></i>
@@ -419,7 +423,7 @@
 
   <!-- Template Main JS File -->
   <script src="{{ asset('assets/js/main.js') }}"></script>
-  
+
   @stack('scripts')
 </body>
 

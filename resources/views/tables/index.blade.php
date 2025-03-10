@@ -5,8 +5,8 @@
 @section('pagetitle', 'Quản lý Bàn')
 
 @section('breadcrumb')
-    <li class="breadcrumb-item"><a href="{{ url('/') }}">Trang chủ</a></li>
-    <li class="breadcrumb-item active">Quản lý Bàn</li>
+<li class="breadcrumb-item"><a href="{{ url('/') }}">Trang chủ</a></li>
+<li class="breadcrumb-item active">Quản lý Bàn</li>
 @endsection
 
 @section('content')
@@ -20,6 +20,13 @@
             <button class="btn btn-primary add-table-btn" data-bs-toggle="modal" data-bs-target="#addTableModal">
                 <i class="fas fa-plus-circle"></i> Thêm bàn mới
             </button>
+            @foreach ($tables as $table)
+            <button class="btn btn-success book-table-btn" data-bs-toggle="modal" data-bs-target="#bookingModal-{{ $table->id }}">
+                <i class="fas fa-calendar-plus"></i> Đặt bàn
+            </button>
+            @endforeach
+
+
         </div>
     </div>
 
@@ -98,6 +105,41 @@
     </div>
 </div>
 
+
+<!-- Modal Đặt Bàn -->
+<div id="bookingModal" class="modal fade" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Đặt bàn</h5>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="bookingForm">
+                    <input type="hidden" id="bookingTableId">
+                    <div class="form-group">
+                        <label>Họ tên</label>
+                        <input type="text" class="form-control" id="customerName" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Số điện thoại</label>
+                        <input type="text" class="form-control" id="customerPhone" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Thời gian bắt đầu</label>
+                        <input type="datetime-local" class="form-control" id="startTime" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Thời gian kết thúc</label>
+                        <input type="datetime-local" class="form-control" id="endTime" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Xác nhận đặt bàn</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Edit Table Modal -->
 <div class="modal fade custom-modal" id="editTableModal" tabindex="-1">
     <div class="modal-dialog">
@@ -115,7 +157,7 @@
                         <label for="edit_table_number" class="form-label">Số Bàn</label>
                         <input type="number" class="form-control" id="edit_table_number" name="table_number" required>
                     </div>
-                     <div class="mb-3">
+                    <div class="mb-3">
                         <label for="edit_area" class="form-label">Khu vực</label>
                         <input type="text" class="form-control" id="edit_area" name="area" required>
                     </div>
@@ -151,270 +193,276 @@
 
 <!-- CSS for modern styling -->
 <style>
-.container-fluid {
-    padding: 20px;
-    background: #f5f7fa;
-}
+    .container-fluid {
+        padding: 20px;
+        background: #f5f7fa;
+    }
 
-.dashboard-header {
-    padding: 25px 30px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-    color: white;
-    border-radius: 15px;
-    margin-bottom: 25px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-}
+    .dashboard-header {
+        padding: 25px 30px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+        color: white;
+        border-radius: 15px;
+        margin-bottom: 25px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
 
-.filter-section {
-    margin: 20px 0;
-    padding: 20px;
-    background: white;
-    border-radius: 15px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-}
+    .filter-section {
+        margin: 20px 0;
+        padding: 20px;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
 
-.status-filter {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 10px;
-}
+    .status-filter {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
 
-.filter-btn {
-    padding: 10px 20px;
-    margin: 0 5px;
-    border: none;
-    border-radius: 25px;
-    background: #f8f9fa;
-    color: #495057;
-    transition: all 0.3s ease;
-    font-weight: 500;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-}
+    .filter-btn {
+        padding: 10px 20px;
+        margin: 0 5px;
+        border: none;
+        border-radius: 25px;
+        background: #f8f9fa;
+        color: #495057;
+        transition: all 0.3s ease;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    }
 
-.filter-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-}
+    .filter-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
 
-.filter-btn.active {
-    background: #2a5298;
-    color: white;
-}
+    .filter-btn.active {
+        background: #2a5298;
+        color: white;
+    }
 
-.tables-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 25px;
-    padding: 20px;
-}
+    .tables-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 25px;
+        padding: 20px;
+    }
 
-.table-card {
-    background: white;
-    border-radius: 20px;
-    padding: 25px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
-    border: none;
-}
+    .table-card {
+        background: white;
+        border-radius: 20px;
+        padding: 25px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        border: none;
+    }
 
-.table-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-}
+    .table-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    }
 
-.table-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 5px;
-}
+    .table-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 5px;
+    }
 
-.table-card.available::before {
-    background: #28a745;
-}
+    .table-card.available::before {
+        background: #28a745;
+    }
 
-.table-card.occupied::before {
-    background: #dc3545;
-}
+    .table-card.occupied::before {
+        background: #dc3545;
+    }
 
-.table-card.unavailable::before {
-    background: #6c757d;
-}
+    .table-card.unavailable::before {
+        background: #6c757d;
+    }
 
-.status-badge {
-    padding: 6px 12px;
-    border-radius: 20px;
-    font-size: 0.9em;
-    font-weight: 500;
-}
+    .status-badge {
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 0.9em;
+        font-weight: 500;
+    }
 
-.status-badge.available {
-    background: rgba(40, 167, 69, 0.1);
-    color: #28a745;
-}
+    .status-badge.available {
+        background: rgba(40, 167, 69, 0.1);
+        color: #28a745;
+    }
 
-.status-badge.occupied {
-    background: rgba(220, 53, 69, 0.1);
-    color: #dc3545;
-}
+    .status-badge.occupied {
+        background: rgba(220, 53, 69, 0.1);
+        color: #dc3545;
+    }
 
-.status-badge.unavailable {
-    background: rgba(108, 117, 125, 0.1);
-    color: #6c757d;
-}
+    .status-badge.unavailable {
+        background: rgba(108, 117, 125, 0.1);
+        color: #6c757d;
+    }
 
-.table-number {
-    font-size: 24px;
-    font-weight: bold;
-    color: #2a5298;
-    margin-bottom: 15px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
+    .table-number {
+        font-size: 24px;
+        font-weight: bold;
+        color: #2a5298;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
 
-.table-info {
-    margin: 10px 0;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 5px 0;
-    border-bottom: 1px solid #f0f0f0;
-}
+    .table-info {
+        margin: 10px 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 5px 0;
+        border-bottom: 1px solid #f0f0f0;
+    }
 
-.table-info span {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    color: #495057;
-}
+    .table-info span {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: #495057;
+    }
 
-.table-actions {
-    margin-top: 20px;
-    display: flex;
-    gap: 15px;
-    justify-content: flex-end;
-}
+    .table-actions {
+        margin-top: 20px;
+        display: flex;
+        gap: 15px;
+        justify-content: flex-end;
+    }
 
-.action-btn {
-    padding: 8px 20px;
-    border: none;
-    border-radius: 25px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-weight: 500;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
+    .action-btn {
+        padding: 8px 20px;
+        border: none;
+        border-radius: 25px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
 
-.action-btn:hover {
-    transform: translateY(-2px);
-}
+    .action-btn:hover {
+        transform: translateY(-2px);
+    }
 
-.edit-btn {
-    background: #2a5298;
-    color: white;
-}
+    .edit-btn {
+        background: #2a5298;
+        color: white;
+    }
 
-.edit-btn:hover {
-    background: #1e3c72;
-}
+    .edit-btn:hover {
+        background: #1e3c72;
+    }
 
-.delete-btn {
-    background: #dc3545;
-    color: white;
-}
+    .delete-btn {
+        background: #dc3545;
+        color: white;
+    }
 
-.delete-btn:hover {
-    background: #c82333;
-}
+    .delete-btn:hover {
+        background: #c82333;
+    }
 
-.add-table-btn {
-    padding: 12px 25px;
-    border-radius: 25px;
-    background: #28a745;
-    border: none;
-    color: white;
-    font-weight: 500;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
-}
+    .add-table-btn {
+        padding: 12px 25px;
+        border-radius: 25px;
+        background: #28a745;
+        border: none;
+        color: white;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+    }
 
-.add-table-btn:hover {
-    background: #218838;
-    transform: translateY(-2px);
-}
+    .add-table-btn:hover {
+        background: #218838;
+        transform: translateY(-2px);
+    }
 
-.add-table-btn i {
-    font-size: 1.2em;
-}
+    .add-table-btn i {
+        font-size: 1.2em;
+    }
 
-/* Modal Styling */
-.custom-modal .modal-content {
-    border-radius: 20px;
-    border: none;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-}
+    /* Modal Styling */
+    .custom-modal .modal-content {
+        border-radius: 20px;
+        border: none;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
 
-.custom-modal .modal-header {
-    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-    color: white;
-    border-radius: 20px 20px 0 0;
-    padding: 20px 30px;
-}
+    .custom-modal .modal-header {
+        background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+        color: white;
+        border-radius: 20px 20px 0 0;
+        padding: 20px 30px;
+    }
 
-.custom-modal .modal-body {
-    padding: 30px;
-}
+    .custom-modal .modal-body {
+        padding: 30px;
+    }
 
-.custom-modal .modal-footer {
-    border-top: none;
-    padding: 20px 30px;
-}
+    .custom-modal .modal-footer {
+        border-top: none;
+        padding: 20px 30px;
+    }
 
-.custom-modal .form-label {
-    font-weight: 500;
-    color: #495057;
-}
+    .custom-modal .form-label {
+        font-weight: 500;
+        color: #495057;
+    }
 
-.custom-modal .form-control,
-.custom-modal .form-select {
-    border-radius: 10px;
-    padding: 10px 15px;
-    border: 1px solid #dee2e6;
-}
+    .custom-modal .form-control,
+    .custom-modal .form-select {
+        border-radius: 10px;
+        padding: 10px 15px;
+        border: 1px solid #dee2e6;
+    }
 
-.custom-modal .form-control:focus,
-.custom-modal .form-select:focus {
-    border-color: #2a5298;
-    box-shadow: 0 0 0 0.2rem rgba(42, 82, 152, 0.25);
-}
+    .custom-modal .form-control:focus,
+    .custom-modal .form-select:focus {
+        border-color: #2a5298;
+        box-shadow: 0 0 0 0.2rem rgba(42, 82, 152, 0.25);
+    }
 </style>
 @endsection
 
 @push('scripts')
-    <script>
-        var tablesIndexRoute = "{{ route('tables.data') }}";
-        var tablesStoreRoute = "{{ route('tables.store') }}";
-        var tablesShowRoute = "{{ route('tables.show', ':id') }}";
-        var tablesUpdateRoute = "{{ route('tables.update', ':id') }}";
-        var tablesDestroyRoute = "{{ route('tables.destroy', ':id') }}";
-    </script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="{{ asset('assets/js/tables.js') }}"></script>
+<script>
+    var tablesIndexRoute = "{{ route('tables.data') }}";
+    var tablesStoreRoute = "{{ route('tables.store') }}";
+    var tablesShowRoute = "{{ route('tables.show', ':id') }}";
+    var tablesUpdateRoute = "{{ route('tables.update', ':id') }}";
+    var tablesDestroyRoute = "{{ route('tables.destroy', ':id') }}";
+</script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="{{ asset('assets/js/tables.js') }}"></script>
+<!-- Bootstrap CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- Bootstrap JS (Phải có Popper.js) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
 @endpush
