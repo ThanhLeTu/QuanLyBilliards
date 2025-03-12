@@ -20,13 +20,7 @@
             <button class="btn btn-primary add-table-btn" data-bs-toggle="modal" data-bs-target="#addTableModal">
                 <i class="fas fa-plus-circle"></i> Thêm bàn mới
             </button>
-            @foreach ($tables as $table)
-            <button class="btn btn-success book-table-btn" data-bs-toggle="modal" data-bs-target="#bookingModal-{{ $table->id }}">
-                <i class="fas fa-calendar-plus"></i> Đặt bàn
-            </button>
-            @endforeach
-
-
+         
         </div>
     </div>
 
@@ -106,46 +100,15 @@
 </div>
 
 
-<!-- Modal Đặt Bàn -->
-<div id="bookingModal" class="modal fade" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Đặt bàn</h5>
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-            </div>
-            <div class="modal-body">
-                <form id="bookingForm">
-                    <input type="hidden" id="bookingTableId">
-                    <div class="form-group">
-                        <label>Họ tên</label>
-                        <input type="text" class="form-control" id="customerName" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Số điện thoại</label>
-                        <input type="text" class="form-control" id="customerPhone" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Thời gian bắt đầu</label>
-                        <input type="datetime-local" class="form-control" id="startTime" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Thời gian kết thúc</label>
-                        <input type="datetime-local" class="form-control" id="endTime" required>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Xác nhận đặt bàn</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
+
+
 
 <!-- Edit Table Modal -->
 <div class="modal fade custom-modal" id="editTableModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="editTableModalLabel">Sửa Bàn</h5>
+                <button class="modal-title" id="editTableModalLabel">Sửa Bàn</button>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">

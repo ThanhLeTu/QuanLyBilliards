@@ -222,7 +222,7 @@ $(document).ready(function() {
                 return 'fa-box';
         }
     }
-
+    
     // Hàm lấy tên danh mục tiếng Việt
     function getCategoryName(category) {
         switch(category) {

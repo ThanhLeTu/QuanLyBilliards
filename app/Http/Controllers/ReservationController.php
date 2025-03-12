@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Reservation;
 use App\Models\Table;
 use App\Models\Customer;
+use App\Models\Service;
+use App\Models\ReservationService;
 use Illuminate\Http\Request;
 
 class ReservationController extends Controller
@@ -29,7 +31,8 @@ class ReservationController extends Controller
     {
         $tables = Table::all();
         $customers = Customer::all();
-        return view('reservations.create', compact('tables', 'customers'));
+        $services = Service::all();
+        return view('reservations.create', compact('tables', 'customers', 'services'));
     }
 
     /**
@@ -46,9 +49,18 @@ class ReservationController extends Controller
             'start_time' => 'required|date',
             'end_time' => 'nullable|date|after:start_time',
             'status' => 'required|in:pending,confirmed,playing,completed,cancelled',
+            'services' => 'array',
+            'services.*.id' => 'exists:services,id',
+            'services.*.quantity' => 'integer|min:1',
         ]);
 
-        Reservation::create($request->all());
+        $reservation = Reservation::create($request->all());
+
+        if ($request->has('services')) {
+            foreach ($request->services as $service) {
+                ReservationService::addServiceToReservation($reservation->id, $service['id'], $service['quantity']);
+            }
+        }
 
         return redirect()->route('reservations.index')
                         ->with('success','Reservation created successfully.');
@@ -62,7 +74,8 @@ class ReservationController extends Controller
      */
     public function show(Reservation $reservation)
     {
-        return view('reservations.show',compact('reservation'));
+        $totalCost = $reservation->calculateTotalCost();
+        return view('reservations.show', compact('reservation', 'totalCost'));
     }
 
     /**
@@ -75,7 +88,8 @@ class ReservationController extends Controller
     {
         $tables = Table::all();
         $customers = Customer::all();
-        return view('reservations.edit',compact('reservation', 'tables', 'customers'));
+        $services = Service::all();
+        return view('reservations.edit', compact('reservation', 'tables', 'customers', 'services'));
     }
 
     /**
@@ -93,9 +107,20 @@ class ReservationController extends Controller
             'start_time' => 'required|date',
             'end_time' => 'nullable|date|after:start_time',
             'status' => 'required|in:pending,confirmed,playing,completed,cancelled',
+            'services' => 'array',
+            'services.*.id' => 'exists:services,id',
+            'services.*.quantity' => 'integer|min:1',
         ]);
 
         $reservation->update($request->all());
+
+        // Cập nhật dịch vụ
+        $reservation->reservationServices()->delete();
+        if ($request->has('services')) {
+            foreach ($request->services as $service) {
+                ReservationService::addServiceToReservation($reservation->id, $service['id'], $service['quantity']);
+            }
+        }
 
         return redirect()->route('reservations.index')
                         ->with('success','Reservation updated successfully');

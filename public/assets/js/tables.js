@@ -71,16 +71,7 @@ $(document).ready(function () {
                                             ${getStatusText(table.status)}
                                         </span>
                                     </div>
-                                    <div class="table-actions">
-                                        ${
-                                            table.status === "available"
-                                                ? `
-                                            <button class="action-btn book-btn" onclick="showBookingModal(${table.id})">
-                                                <i class="fas fa-calendar-plus"></i> Đặt bàn
-                                            </button>
-                                        `
-                                                : ""
-                                        }
+                                    <div class="table-actions"
                                         <button class="action-btn edit-btn" onclick="showEditModal(${
                                             table.id
                                         })">
@@ -166,7 +157,9 @@ $(document).ready(function () {
             success: function (data) {
                 loadTables();
                 $("#addTableForm")[0].reset();
-                $("#addTableModal").modal("hide");
+                $("#addTableModal").removeClass("show").hide();
+                $(".modal-backdrop").remove();
+                
                 alert("Thêm bàn thành công!");
             },
             error: function (xhr, status, error) {

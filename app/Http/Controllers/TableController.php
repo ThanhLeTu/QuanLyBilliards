@@ -4,10 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Table;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log; // Add this line
 
 class TableController extends Controller
 {
-    /**
+    /**p
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\JsonResponse
