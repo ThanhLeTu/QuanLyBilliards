@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\Reservation;
@@ -47,7 +48,7 @@ class ReservationController extends Controller
             'customer_email' => 'nullable|email',
             'start_time' => 'required|date',
             'end_time' => 'required|date|after:start_time',
-            'status' => 'required|in:pending,confirmed,playing,completed,cancelled',
+            'status' => 'required|in:confirmed,playing,completed,cancelled',
         ]);
 
         try {
@@ -78,7 +79,7 @@ class ReservationController extends Controller
             $table->save();
 
             return redirect()->route('table.index')
-                             ->with('success', 'Đặt bàn thành công.');
+                ->with('success', 'Đặt bàn thành công.');
         } catch (\Exception $e) {
             Log::error("Lỗi khi đặt bàn: " . $e->getMessage() . "\n" . $e->getTraceAsString());
             return redirect()->back()->with('error', 'Đã xảy ra lỗi khi đặt bàn.');
@@ -123,13 +124,13 @@ class ReservationController extends Controller
             'customer_id' => 'required|exists:customers,id',
             'start_time' => 'required|date',
             'end_time' => 'required|date|after:start_time',
-            'status' => 'required|in:pending,confirmed,playing,completed,cancelled',
+            'status' => 'required|in:confirmed,playing,completed,cancelled',
         ]);
 
         try {
             $reservation->update($request->all());
             return redirect()->route('reservations.index')
-                             ->with('success', 'Cập nhật đặt bàn thành công.');
+                ->with('success', 'Cập nhật đặt bàn thành công.');
         } catch (\Exception $e) {
             Log::error("Lỗi khi cập nhật đặt bàn: " . $e->getMessage() . "\n" . $e->getTraceAsString());
             return redirect()->back()->with('error', 'Đã xảy ra lỗi khi cập nhật đặt bàn.');
@@ -152,12 +153,33 @@ class ReservationController extends Controller
 
             $reservation->delete();
             return redirect()->route('reservations.index')
-                             ->with('success', 'Hủy đặt bàn thành công.');
+                ->with('success', 'Hủy đặt bàn thành công.');
         } catch (\Exception $e) {
             Log::error("Lỗi khi hủy đặt bàn: " . $e->getMessage() . "\n" . $e->getTraceAsString());
             return redirect()->back()->with('error', 'Đã xảy ra lỗi khi hủy đặt bàn.');
         }
     }
-    
+
+    public function cancel($table_id)
+    {
+        try {
+            // Tìm đặt bàn theo table_id
+            $reservation = Reservation::where('table_id', $table_id)->first();
+
+            if (!$reservation) {
+                return response()->json(['success' => false, 'message' => 'Không tìm thấy đặt bàn cho bàn này.'], 404);
+            }
+
+            // Cập nhật trạng thái bàn về "available"
+            $table = Table::find($table_id);
+            if ($table) {
+                $table->status = 'available';
+                $table->save();
+            }
+
+            return response()->json(['success' => true, 'message' => 'Hủy đặt bàn thành công, bàn đã sẵn sàng.']);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => 'Lỗi khi hủy đặt bàn.'], 500);
+        }
+    }
 }
-?>

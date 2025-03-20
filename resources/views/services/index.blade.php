@@ -543,7 +543,7 @@ input, textarea {
     .service-list-section {
         max-height: calc(100vh - 400px);
     }
-}
+}}
 </style>
 @endsection
 
@@ -562,4 +562,3 @@ input, textarea {
 </script>
 <script src="{{ asset('assets/js/services.js') }}"></script>
 @endpush
-

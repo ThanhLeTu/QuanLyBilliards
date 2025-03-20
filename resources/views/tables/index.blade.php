@@ -204,7 +204,6 @@
                         <div class="mb-3">
                             <label for="status" class="form-label">Trạng thái</label>
                             <select class="form-select" id="status" name="status" required>
-                                <option value="pending">Chờ xác nhận</option>
                                 <option value="confirmed">Đã xác nhận</option>
                                 <option value="playing">Đang chơi</option>
                                 <option value="completed">Hoàn thành</option>

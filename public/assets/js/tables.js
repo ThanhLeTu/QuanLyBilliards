@@ -43,7 +43,7 @@ window.deleteTable = function(id) {
 };
 
 $(document).ready(function() {
-    function loadTables() {
+    window.loadTables = function() {
         $.ajax({
             url: tablesIndexRoute,
             type: "GET",
@@ -94,6 +94,32 @@ $(document).ready(function() {
             }
         });
     }
+    $(document).on('click', '.cancel-reservation-btn', function() {
+        let tableId = $(this).data('id');
+    
+        if (!tableId) {
+            alert("Không tìm thấy bàn để hủy đặt!");
+            return;
+        }
+    
+        if (confirm('Bạn có chắc chắn muốn hủy đặt bàn này không?')) {
+            $.ajax({
+                url: `/reservations/cancel/${tableId}`,  // API mới
+                type: 'PATCH',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(response) {
+                    alert(response.message);
+                    loadTables(); // Load lại danh sách bàn
+                },
+                error: function(xhr) {
+                    console.error("Lỗi khi hủy đặt bàn:", xhr.responseText);
+                    alert('Lỗi khi hủy đặt bàn!');
+                }
+            });
+        }
+    });
 
     function getStatusIcon(status) {
         switch(status) {

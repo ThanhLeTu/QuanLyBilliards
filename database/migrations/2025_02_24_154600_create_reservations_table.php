@@ -19,7 +19,7 @@ class CreateReservationsTable extends Migration
             $table->unsignedBigInteger('customer_id');
             $table->dateTime('start_time');
             $table->dateTime('end_time')->nullable();
-            $table->enum('status', ['pending', 'confirmed', 'playing', 'completed', 'cancelled'])->default('pending');
+            $table->enum('status', ['confirmed', 'playing', 'completed', 'cancelled'])->default('confirmed');
             $table->timestamps();
 
             $table->foreign('table_id')->references('id')->on('tables');
