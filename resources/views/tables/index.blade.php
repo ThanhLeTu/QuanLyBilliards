@@ -20,6 +20,11 @@
             <button class="btn btn-primary add-table-btn" data-bs-toggle="modal" data-bs-target="#addTableModal">
                 <i class="fas fa-plus-circle"></i> Thêm bàn mới
             </button>
+
+            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addReservationModal">
+                <i class="fas fa-calendar-plus"></i> Đặt Bàn
+            </button>
+
         </div>
     </div>
 
@@ -29,12 +34,16 @@
             <button class="filter-btn active" data-status="all">
                 <i class="fas fa-border-all"></i> Tất cả
             </button>
+            <button class="filter-btn" data-status="reserved">
+                <i class="fas fa-"></i> Đã đặt
+            </button>
             <button class="filter-btn" data-status="available">
                 <i class="fas fa-check-circle"></i> Trống
             </button>
             <button class="filter-btn" data-status="occupied">
                 <i class="fas fa-user"></i> Đang sử dụng
             </button>
+            
             <button class="filter-btn" data-status="unavailable">
                 <i class="fas fa-ban"></i> Không khả dụng
             </button>
@@ -80,6 +89,7 @@
                         <label for="status" class="form-label">Trạng thái</label>
                         <select class="form-select" id="status" name="status" required>
                             <option value="available">Trống</option>
+                            <option value="reserved">Đã đặt</option>
                             <option value="occupied">Đang sử dụng</option>
                             <option value="unavailable">Không khả dụng</option>
                         </select>
@@ -131,6 +141,7 @@
                         <label for="edit_status" class="form-label">Trạng thái</label>
                         <select class="form-select" id="edit_status" name="status" required>
                             <option value="available">Trống</option>
+                            <option value="reserved">Đã đặt</option>
                             <option value="occupied">Đang sử dụng</option>
                             <option value="unavailable">Không khả dụng</option>
                         </select>
@@ -148,6 +159,68 @@
         </div>
     </div>
 </div>
+
+    <!-- Add Reservation Modal -->
+    <div class="modal fade custom-modal" id="addReservationModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addReservationModalLabel">Đặt Bàn</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addReservationForm" action="{{ route('reservations.store') }}" method="POST">
+                        @csrf
+                        <div class="mb-3">
+                            <label for="table_id" class="form-label">Chọn Bàn</label>
+                            <select class="form-select" id="table_id" name="table_id" required>
+                                @foreach($tables as $table)
+                                <option value="{{ $table->id }}">Bàn số {{ $table->table_number }} - {{ $table->area }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="customer_name" class="form-label">Tên Khách Hàng</label>
+                            <input type="text" class="form-control" id="customer_name" name="customer_name">
+                        </div>
+                        <div class="mb-3">
+                            <label for="customer_phone" class="form-label">Số Điện Thoại</label>
+                            <input type="text" class="form-control" id="customer_phone" name="customer_phone">
+                        </div>
+                        <div class="mb-3">
+                            <label for="customer_email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="customer_email" name="customer_email">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="start_time" class="form-label">Thời gian bắt đầu</label>
+                            <input type="datetime-local" class="form-control" id="start_time" name="start_time" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="end_time" class="form-label">Thời gian kết thúc</label>
+                            <input type="datetime-local" class="form-control" id="end_time" name="end_time">
+                        </div>
+                        <div class="mb-3">
+                            <label for="status" class="form-label">Trạng thái</label>
+                            <select class="form-select" id="status" name="status" required>
+                                <option value="pending">Chờ xác nhận</option>
+                                <option value="confirmed">Đã xác nhận</option>
+                                <option value="playing">Đang chơi</option>
+                                <option value="completed">Hoàn thành</option>
+                                <option value="cancelled">Đã hủy</option>
+                            </select>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                            <button type="submit" class="btn btn-primary">Đặt Bàn</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
 <!-- CSS for modern styling -->
 <style>

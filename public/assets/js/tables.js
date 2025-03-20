@@ -77,6 +77,12 @@ $(document).ready(function() {
                                     <i class="fas fa-trash-alt"></i> Xóa
                                 </button>
                             </div>
+                            ${table.status === 'reserved' ? `
+                            <div class="reservation-actions">
+                                <button class="btn btn-success confirm-reservation-btn" data-id="${table.id}">Xác nhận</button>
+                                <button class="btn btn-danger cancel-reservation-btn" data-id="${table.id}">Hủy</button>
+                            </div>
+                            ` : ''}
                         </div>
                     `;
                 });
@@ -93,6 +99,8 @@ $(document).ready(function() {
         switch(status) {
             case 'available':
                 return '<i class="fas fa-check-circle text-success"></i>';
+            case 'reserved':
+                return '<i class="fas fa-user text-danger"></i>';
             case 'occupied':
                 return '<i class="fas fa-user text-danger"></i>';
             case 'unavailable':
@@ -106,6 +114,8 @@ $(document).ready(function() {
         switch(status) {
             case 'available':
                 return 'Trống';
+            case 'reserved':
+                return 'Đã đặt';
             case 'occupied':
                 return 'Đang sử dụng';
             case 'unavailable':
@@ -227,4 +237,5 @@ $(document).ready(function() {
             });
         }
     });
+
 });

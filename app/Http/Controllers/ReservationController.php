@@ -1,11 +1,11 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use App\Models\Reservation;
 use App\Models\Table;
 use App\Models\Customer;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class ReservationController extends Controller
 {
@@ -16,7 +16,7 @@ class ReservationController extends Controller
      */
     public function index()
     {
-        $reservations = Reservation::all();
+        $reservations = Reservation::with(['table', 'customer'])->get();
         return view('reservations.index', compact('reservations'));
     }
 
@@ -27,9 +27,8 @@ class ReservationController extends Controller
      */
     public function create()
     {
-        $tables = Table::all();
-        $customers = Customer::all();
-        return view('reservations.create', compact('tables', 'customers'));
+        $tables = Table::where('status', 'available')->get();
+        return view('reservations.create', compact('tables'));
     }
 
     /**
@@ -40,18 +39,50 @@ class ReservationController extends Controller
      */
     public function store(Request $request)
     {
+        // Validate dữ liệu đầu vào
         $request->validate([
             'table_id' => 'required|exists:tables,id',
-            'customer_id' => 'required|exists:customers,id',
+            'customer_name' => 'required|string|max:255',
+            'customer_phone' => 'required|string|max:15',
+            'customer_email' => 'nullable|email',
             'start_time' => 'required|date',
-            'end_time' => 'nullable|date|after:start_time',
+            'end_time' => 'required|date|after:start_time',
             'status' => 'required|in:pending,confirmed,playing,completed,cancelled',
         ]);
 
-        Reservation::create($request->all());
+        try {
+            // Kiểm tra xem bàn có sẵn sàng để đặt không
+            $table = Table::findOrFail($request->table_id);
+            if ($table->status !== 'available') {
+                return redirect()->back()->with('error', 'Bàn không khả dụng để đặt.');
+            }
 
-        return redirect()->route('reservations.index')
-                        ->with('success','Reservation created successfully.');
+            // Tạo mới khách hàng
+            $customer = Customer::create([
+                'name' => $request->customer_name,
+                'phone' => $request->customer_phone,
+                'email' => $request->customer_email,
+            ]);
+
+            // Tạo mới reservation với customer_id vừa tạo
+            $reservation = Reservation::create([
+                'table_id' => $request->table_id,
+                'customer_id' => $customer->id,
+                'start_time' => $request->start_time,
+                'end_time' => $request->end_time,
+                'status' => $request->status,
+            ]);
+
+            // Cập nhật trạng thái của bàn thành "reserved"
+            $table->status = 'reserved';
+            $table->save();
+
+            return redirect()->route('table.index')
+                             ->with('success', 'Đặt bàn thành công.');
+        } catch (\Exception $e) {
+            Log::error("Lỗi khi đặt bàn: " . $e->getMessage() . "\n" . $e->getTraceAsString());
+            return redirect()->back()->with('error', 'Đã xảy ra lỗi khi đặt bàn.');
+        }
     }
 
     /**
@@ -62,7 +93,7 @@ class ReservationController extends Controller
      */
     public function show(Reservation $reservation)
     {
-        return view('reservations.show',compact('reservation'));
+        return view('reservations.show', compact('reservation'));
     }
 
     /**
@@ -75,7 +106,7 @@ class ReservationController extends Controller
     {
         $tables = Table::all();
         $customers = Customer::all();
-        return view('reservations.edit',compact('reservation', 'tables', 'customers'));
+        return view('reservations.edit', compact('reservation', 'tables', 'customers'));
     }
 
     /**
@@ -91,14 +122,18 @@ class ReservationController extends Controller
             'table_id' => 'required|exists:tables,id',
             'customer_id' => 'required|exists:customers,id',
             'start_time' => 'required|date',
-            'end_time' => 'nullable|date|after:start_time',
+            'end_time' => 'required|date|after:start_time',
             'status' => 'required|in:pending,confirmed,playing,completed,cancelled',
         ]);
 
-        $reservation->update($request->all());
-
-        return redirect()->route('reservations.index')
-                        ->with('success','Reservation updated successfully');
+        try {
+            $reservation->update($request->all());
+            return redirect()->route('reservations.index')
+                             ->with('success', 'Cập nhật đặt bàn thành công.');
+        } catch (\Exception $e) {
+            Log::error("Lỗi khi cập nhật đặt bàn: " . $e->getMessage() . "\n" . $e->getTraceAsString());
+            return redirect()->back()->with('error', 'Đã xảy ra lỗi khi cập nhật đặt bàn.');
+        }
     }
 
     /**
@@ -109,9 +144,20 @@ class ReservationController extends Controller
      */
     public function destroy(Reservation $reservation)
     {
-        $reservation->delete();
+        try {
+            // Cập nhật trạng thái của bàn thành "available" khi hủy đặt bàn
+            $table = $reservation->table;
+            $table->status = 'available';
+            $table->save();
 
-        return redirect()->route('reservations.index')
-                        ->with('success','Reservation deleted successfully');
+            $reservation->delete();
+            return redirect()->route('reservations.index')
+                             ->with('success', 'Hủy đặt bàn thành công.');
+        } catch (\Exception $e) {
+            Log::error("Lỗi khi hủy đặt bàn: " . $e->getMessage() . "\n" . $e->getTraceAsString());
+            return redirect()->back()->with('error', 'Đã xảy ra lỗi khi hủy đặt bàn.');
+        }
     }
+    
 }
+?>
