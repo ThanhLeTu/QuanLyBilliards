@@ -5,6 +5,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\TableController;
 use App\Http\Controllers\ServiceController;
 
+
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
 // Tables routes (reference)
