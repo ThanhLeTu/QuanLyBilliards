@@ -75,10 +75,19 @@ class ReservationController extends Controller
             ]);
 
             // Cập nhật trạng thái của bàn thành "reserved"
-            $table->status = 'reserved';
+            $table->status = 'occupied';
             $table->save();
 
-            return redirect()->route('table.index')
+
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Đặt bàn thành công!'
+                ]);
+            }
+            
+
+            return redirect()->route('home')
                 ->with('success', 'Đặt bàn thành công.');
         } catch (\Exception $e) {
             Log::error("Lỗi khi đặt bàn: " . $e->getMessage() . "\n" . $e->getTraceAsString());
@@ -176,6 +185,8 @@ class ReservationController extends Controller
                 $table->status = 'available';
                 $table->save();
             }
+            $reservation->status = 'cancelled';
+            $reservation->save();
 
             return response()->json(['success' => true, 'message' => 'Hủy đặt bàn thành công, bàn đã sẵn sàng.']);
         } catch (\Exception $e) {

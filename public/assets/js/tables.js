@@ -77,7 +77,7 @@ $(document).ready(function() {
                                     <i class="fas fa-trash-alt"></i> Xóa
                                 </button>
                             </div>
-                            ${table.status === 'reserved' ? `
+                            ${table.status === 'occupied' ? `
                             <div class="reservation-actions">
                                 <button class="btn btn-success confirm-reservation-btn" data-id="${table.id}">Xác nhận</button>
                                 <button class="btn btn-danger cancel-reservation-btn" data-id="${table.id}">Hủy</button>
@@ -94,6 +94,44 @@ $(document).ready(function() {
             }
         });
     }
+
+// Xử lý submit form đặt bàn
+$('#addReservationForm').submit(function(e) {
+    e.preventDefault(); // Ngăn chặn form submit theo cách thông thường
+    
+    // Lấy dữ liệu từ form
+    let formData = $(this).serialize();
+    
+    // Gửi Ajax request
+    $.ajax({
+        url: $(this).attr('action'),
+        type: 'POST',
+        data: formData,
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        success: function(response) {
+            // Hiển thị thông báo thành công
+            alert(response.message || 'Đặt bàn thành công!');
+            
+            // Đóng modal
+            $('#addReservationModal').modal('hide');
+            
+            // Cập nhật giao diện
+            loadTables(); // Tải lại danh sách bàn
+            updateTableStats(); // Cập nhật thống kê
+            
+            // Reset form
+            $('#addReservationForm')[0].reset();
+        },
+        error: function(xhr) {
+            console.error("Lỗi khi đặt bàn:", xhr.responseText);
+            alert('Lỗi khi đặt bàn: ' + (xhr.responseJSON?.message || 'Đã xảy ra lỗi'));
+        }
+    });
+});
+
+
     $(document).on('click', '.cancel-reservation-btn', function() {
         let tableId = $(this).data('id');
     
@@ -104,7 +142,7 @@ $(document).ready(function() {
     
         if (confirm('Bạn có chắc chắn muốn hủy đặt bàn này không?')) {
             $.ajax({
-                url: `/reservations/cancel/${tableId}`,  // API mới
+                url: `/reservations/cancel/${tableId}`,
                 type: 'PATCH',
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -112,6 +150,9 @@ $(document).ready(function() {
                 success: function(response) {
                     alert(response.message);
                     loadTables(); // Load lại danh sách bàn
+                    
+                    // Cập nhật thống kê mà không reload trang
+                    updateTableStats();
                 },
                 error: function(xhr) {
                     console.error("Lỗi khi hủy đặt bàn:", xhr.responseText);
@@ -120,7 +161,42 @@ $(document).ready(function() {
             });
         }
     });
+    
+    function updateTableStats() {
+        $.ajax({
+            url: '/table-stats',
+            type: 'GET',
+            success: function(data) {
+                // Cập nhật thống kê
+                $('#active-tables').text(data.activeTables);
+                $('#total-tables').text(data.totalTables);
+                $('#usage-rate').text(data.usageRate);
+                
+                // Cập nhật dropdown bàn có sẵn
+                updateAvailableTablesDropdown(data.availableTables);
+            },
+            error: function(xhr) {
+                console.error("Lỗi khi cập nhật thống kê:", xhr.responseText);
+            }
+        });
+    }
+    
+    // Thêm hàm mới để cập nhật dropdown bàn có sẵn
+    function updateAvailableTablesDropdown(availableTables) {
+        var dropdown = $('#table_id');
+        dropdown.empty(); // Xóa các option hiện tại
+        
+        // Thêm các option mới
+        $.each(availableTables, function(index, table) {
+            dropdown.append(
+                $('<option></option>')
+                    .attr('value', table.id)
+                    .text('Bàn số ' + table.table_number + ' - ' + table.area)
+            );
+        });
+    }
 
+    
     function getStatusIcon(status) {
         switch(status) {
             case 'available':

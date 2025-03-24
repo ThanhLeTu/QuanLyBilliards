@@ -43,7 +43,7 @@ class TableController extends Controller
         try {
             $request->validate([
                 'table_number' => 'required|unique:tables',
-                 'status' => 'required|in:available,occupied,unavailable,reserved',              
+                 'status' => 'required|in:available,occupied,unavailable',              
                 'area' => 'required',
                 'table_type' => 'required',
                 'price' => 'required|numeric|min:0',
@@ -80,7 +80,7 @@ class TableController extends Controller
     {
         $request->validate([
             'table_number' => 'required|unique:tables,table_number,'.$table->id,
-            'status' => 'required|in:available,occupied,unavailable,reserved',                          'area' => 'required',
+            'status' => 'required|in:available,occupied,unavailable','area' => 'required',
             'table_type' => 'required',
             'price' => 'required|numeric|min:0',
             'description' => 'nullable',

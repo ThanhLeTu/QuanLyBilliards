@@ -34,9 +34,6 @@
             <button class="filter-btn active" data-status="all">
                 <i class="fas fa-border-all"></i> Tất cả
             </button>
-            <button class="filter-btn" data-status="reserved">
-                <i class="fas fa-"></i> Đã đặt
-            </button>
             <button class="filter-btn" data-status="available">
                 <i class="fas fa-check-circle"></i> Trống
             </button>
@@ -89,8 +86,7 @@
                         <label for="status" class="form-label">Trạng thái</label>
                         <select class="form-select" id="status" name="status" required>
                             <option value="available">Trống</option>
-                            <option value="reserved">Đã đặt</option>
-                            <option value="occupied">Đang sử dụng</option>
+                             <option value="occupied">Đang sử dụng</option>
                             <option value="unavailable">Không khả dụng</option>
                         </select>
                     </div>
@@ -141,8 +137,7 @@
                         <label for="edit_status" class="form-label">Trạng thái</label>
                         <select class="form-select" id="edit_status" name="status" required>
                             <option value="available">Trống</option>
-                            <option value="reserved">Đã đặt</option>
-                            <option value="occupied">Đang sử dụng</option>
+                           <option value="occupied">Đang sử dụng</option>
                             <option value="unavailable">Không khả dụng</option>
                         </select>
                     </div>
@@ -160,324 +155,12 @@
     </div>
 </div>
 
-    <!-- Add Reservation Modal -->
-    <div class="modal fade custom-modal" id="addReservationModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="addReservationModalLabel">Đặt Bàn</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="addReservationForm" action="{{ route('reservations.store') }}" method="POST">
-                        @csrf
-                        <div class="mb-3">
-                            <label for="table_id" class="form-label">Chọn Bàn</label>
-                            <select class="form-select" id="table_id" name="table_id" required>
-                                @foreach($tables as $table)
-                                <option value="{{ $table->id }}">Bàn số {{ $table->table_number }} - {{ $table->area }}</option>
-                                @endforeach
-                            </select>
-                        </div>
 
-                        <div class="mb-3">
-                            <label for="customer_name" class="form-label">Tên Khách Hàng</label>
-                            <input type="text" class="form-control" id="customer_name" name="customer_name">
-                        </div>
-                        <div class="mb-3">
-                            <label for="customer_phone" class="form-label">Số Điện Thoại</label>
-                            <input type="text" class="form-control" id="customer_phone" name="customer_phone">
-                        </div>
-                        <div class="mb-3">
-                            <label for="customer_email" class="form-label">Email</label>
-                            <input type="email" class="form-control" id="customer_email" name="customer_email">
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="start_time" class="form-label">Thời gian bắt đầu</label>
-                            <input type="datetime-local" class="form-control" id="start_time" name="start_time" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="end_time" class="form-label">Thời gian kết thúc</label>
-                            <input type="datetime-local" class="form-control" id="end_time" name="end_time">
-                        </div>
-                        <div class="mb-3">
-                            <label for="status" class="form-label">Trạng thái</label>
-                            <select class="form-select" id="status" name="status" required>
-                                <option value="confirmed">Đã xác nhận</option>
-                                <option value="playing">Đang chơi</option>
-                                <option value="completed">Hoàn thành</option>
-                                <option value="cancelled">Đã hủy</option>
-                            </select>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                            <button type="submit" class="btn btn-primary">Đặt Bàn</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-<!-- CSS for modern styling -->
-<style>
-.container-fluid {
-    padding: 20px;
-    background: #f5f7fa;
-}
-
-.dashboard-header {
-    padding: 25px 30px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-    color: white;
-    border-radius: 15px;
-    margin-bottom: 25px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-}
-
-.filter-section {
-    margin: 20px 0;
-    padding: 20px;
-    background: white;
-    border-radius: 15px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-}
-
-.status-filter {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 10px;
-}
-
-.filter-btn {
-    padding: 10px 20px;
-    margin: 0 5px;
-    border: none;
-    border-radius: 25px;
-    background: #f8f9fa;
-    color: #495057;
-    transition: all 0.3s ease;
-    font-weight: 500;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-}
-
-.filter-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-}
-
-.filter-btn.active {
-    background: #2a5298;
-    color: white;
-}
-
-.tables-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 25px;
-    padding: 20px;
-}
-
-.table-card {
-    background: white;
-    border-radius: 20px;
-    padding: 25px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
-    border: none;
-}
-
-.table-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-}
-
-.table-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 5px;
-}
-
-.table-card.available::before {
-    background: #28a745;
-}
-
-.table-card.occupied::before {
-    background: #dc3545;
-}
-
-.table-card.unavailable::before {
-    background: #6c757d;
-}
-
-.status-badge {
-    padding: 6px 12px;
-    border-radius: 20px;
-    font-size: 0.9em;
-    font-weight: 500;
-}
-
-.status-badge.available {
-    background: rgba(40, 167, 69, 0.1);
-    color: #28a745;
-}
-
-.status-badge.occupied {
-    background: rgba(220, 53, 69, 0.1);
-    color: #dc3545;
-}
-
-.status-badge.unavailable {
-    background: rgba(108, 117, 125, 0.1);
-    color: #6c757d;
-}
-
-.table-number {
-    font-size: 24px;
-    font-weight: bold;
-    color: #2a5298;
-    margin-bottom: 15px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.table-info {
-    margin: 10px 0;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 5px 0;
-    border-bottom: 1px solid #f0f0f0;
-}
-
-.table-info span {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    color: #495057;
-}
-
-.table-actions {
-    margin-top: 20px;
-    display: flex;
-    gap: 15px;
-    justify-content: flex-end;
-}
-
-.action-btn {
-    padding: 8px 20px;
-    border: none;
-    border-radius: 25px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-weight: 500;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.action-btn:hover {
-    transform: translateY(-2px);
-}
-
-.edit-btn {
-    background: #2a5298;
-    color: white;
-}
-
-.edit-btn:hover {
-    background: #1e3c72;
-}
-
-.delete-btn {
-    background: #dc3545;
-    color: white;
-}
-
-.delete-btn:hover {
-    background: #c82333;
-}
-
-.add-table-btn {
-    padding: 12px 25px;
-    border-radius: 25px;
-    background: #28a745;
-    border: none;
-    color: white;
-    font-weight: 500;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
-}
-
-.add-table-btn:hover {
-    background: #218838;
-    transform: translateY(-2px);
-}
-
-.add-table-btn i {
-    font-size: 1.2em;
-}
-
-/* Modal Styling */
-.custom-modal .modal-content {
-    border-radius: 20px;
-    border: none;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-}
-
-.custom-modal .modal-header {
-    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-    color: white;
-    border-radius: 20px 20px 0 0;
-    padding: 20px 30px;
-}
-
-.custom-modal .modal-body {
-    padding: 30px;
-}
-
-.custom-modal .modal-footer {
-    border-top: none;
-    padding: 20px 30px;
-}
-
-.custom-modal .form-label {
-    font-weight: 500;
-    color: #495057;
-}
-
-.custom-modal .form-control,
-.custom-modal .form-select {
-    border-radius: 10px;
-    padding: 10px 15px;
-    border: 1px solid #dee2e6;
-}
-
-.custom-modal .form-control:focus,
-.custom-modal .form-select:focus {
-    border-color: #2a5298;
-    box-shadow: 0 0 0 0.2rem rgba(42, 82, 152, 0.25);
-}
-</style>
+    
 @endsection
+@push('styles')
+    <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
+@endpush
 
 @push('scripts')
     <script>

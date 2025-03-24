@@ -22,3 +22,5 @@ Route::resource('reservations', ReservationController::class);
 Route::get('/reservations/create', [ReservationController::class, 'create'])->name('reservations.create');
 Route::patch('/reservations/cancel/{table_id}', [ReservationController::class, 'cancel'])
      ->name('reservations.cancel');
+
+Route::get('/table-stats', [HomeController::class, 'getTableStats'])->name('table.stats');
