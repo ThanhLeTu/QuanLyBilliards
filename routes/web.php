@@ -24,3 +24,4 @@ Route::patch('/reservations/cancel/{table_id}', [ReservationController::class, '
      ->name('reservations.cancel');
 
 Route::get('/table-stats', [HomeController::class, 'getTableStats'])->name('table.stats');
+Route::patch('/reservations/confirm/{id}', [ReservationController::class, 'confirmReservation']);

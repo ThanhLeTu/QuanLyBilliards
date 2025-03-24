@@ -42,6 +42,7 @@ window.deleteTable = function(id) {
     }
 };
 
+
 $(document).ready(function() {
     window.loadTables = function() {
         $.ajax({
@@ -69,6 +70,7 @@ $(document).ready(function() {
                                     ${getStatusText(table.status)}
                                 </span>
                             </div>
+                              ${!isHomePage ? `
                             <div class="table-actions">
                                 <button class="action-btn edit-btn" onclick="showEditModal(${table.id})">
                                     <i class="fas fa-edit"></i> Sửa
@@ -77,6 +79,7 @@ $(document).ready(function() {
                                     <i class="fas fa-trash-alt"></i> Xóa
                                 </button>
                             </div>
+                               ` : ''}
                             ${table.status === 'occupied' ? `
                             <div class="reservation-actions">
                                 <button class="btn btn-success confirm-reservation-btn" data-id="${table.id}">Xác nhận</button>
@@ -129,6 +132,34 @@ $('#addReservationForm').submit(function(e) {
             alert('Lỗi khi đặt bàn: ' + (xhr.responseJSON?.message || 'Đã xảy ra lỗi'));
         }
     });
+});
+
+$(document).on('click', '.confirm-reservation-btn', function() {
+    let tableId = $(this).data('id');
+
+    if (!tableId) {
+        alert("Không tìm thấy bàn để xác nhận!");
+        return;
+    }
+
+    if (confirm('Bạn có chắc chắn muốn xác nhận bàn này không?')) {
+        $.ajax({
+            url: `/reservations/confirm/${tableId}`,  // API cập nhật trạng thái
+            type: 'PATCH',
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: function(response) {
+                alert(response.message);
+                loadTables();  // Load lại danh sách bàn
+                updateTableStats(); // Cập nhật số bàn đang hoạt động
+            },
+            error: function(xhr) {
+                console.error("Lỗi khi xác nhận bàn:", xhr.responseText);
+                alert('Lỗi khi xác nhận bàn!');
+            }
+        });
+    }
 });
 
 

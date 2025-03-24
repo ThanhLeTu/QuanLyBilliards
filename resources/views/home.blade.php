@@ -108,7 +108,6 @@
             </div>
         </div>
     </div>
-
     
 @endsection
 @push('styles')
@@ -117,6 +116,7 @@
 
 @push('scripts')
     <script>
+         var isHomePage = true;
         var tablesIndexRoute = "{{ route('tables.data') }}";
         var tablesStoreRoute = "{{ route('tables.store') }}";
         var tablesShowRoute = "{{ route('tables.show', ':id') }}";

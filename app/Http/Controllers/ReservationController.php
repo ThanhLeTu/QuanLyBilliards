@@ -193,4 +193,30 @@ class ReservationController extends Controller
             return response()->json(['success' => false, 'message' => 'Lỗi khi hủy đặt bàn.'], 500);
         }
     }
+    public function confirmReservation($table_id)
+{
+    // Tìm đặt bàn theo table_id với trạng thái "confirmed"
+    $reservation = Reservation::where('table_id', $table_id)
+                              ->where('status', 'confirmed')
+                              ->first();
+
+    if (!$reservation) {
+        return response()->json(['message' => 'Không tìm thấy đặt bàn cho bàn này!'], 404);
+    }
+
+    // Cập nhật trạng thái và thời gian bắt đầu
+    $reservation->status = 'playing';
+    $reservation->start_time = now();
+    $reservation->save();
+
+    // Cập nhật trạng thái bàn thành "occupied"
+    $table = Table::find($table_id);
+    if ($table) {
+        $table->status = 'occupied';
+        $table->save();
+    }
+
+    return response()->json(['message' => 'Bàn đã được xác nhận!']);
+}
+
 }
