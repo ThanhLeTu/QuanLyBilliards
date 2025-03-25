@@ -559,6 +559,7 @@ input, textarea {
     const servicesShowRoute = "{{ route('services.show', ':id') }}";
     const servicesUpdateRoute = "{{ route('services.update', ':id') }}";
     const servicesDestroyRoute = "{{ route('services.destroy', ':id') }}";
+    const servicesDeleteRoute = "{{ route('services.destroy', ':id') }}";
 </script>
 <script src="{{ asset('assets/js/services.js') }}"></script>
 @endpush

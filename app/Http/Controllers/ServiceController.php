@@ -130,21 +130,29 @@ class ServiceController extends Controller
      * @param  \App\Models\Service  $service
      * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy(Service $service)
+    public function destroy($id)
     {
         try {
+            $service = Service::findOrFail($id);
+            
+            // Xóa file ảnh cũ nếu có
             if ($service->image) {
-                Storage::disk('public')->delete('services/' . $service->image);
+                Storage::delete('public/services/' . $service->image);
             }
             
+            // Xóa dịch vụ
             $service->delete();
-
+            
             return response()->json([
-                'message' => 'Service deleted successfully'
-            ], 200);
+                'success' => true,
+                'message' => 'Đã xóa dịch vụ thành công'
+            ]);
         } catch (\Exception $e) {
-            Log::error('Error deleting service: ' . $e->getMessage());
-            return response()->json(['error' => 'Could not delete service'], 500);
+            return response()->json([
+                'success' => false,
+                'message' => 'Không thể xóa dịch vụ'
+            ], 500);
         }
     }
+    
 }

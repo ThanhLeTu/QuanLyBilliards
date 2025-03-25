@@ -1,3 +1,6 @@
+// // Thêm biến isHomePage ở đầu file
+// const isHomePage = false; // hoặc true tùy theo context
+
 // Define functions in global scope
 window.showEditModal = function(id) {
     $.ajax({

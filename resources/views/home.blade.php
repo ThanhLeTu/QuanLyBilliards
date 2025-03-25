@@ -1,128 +1,141 @@
-
 @extends('layouts.app')
 
 @section('title', 'Trang chủ')
 
-@section('pagetitle', 'Trang chủ')
-
 @section('breadcrumb')
-    <li class="breadcrumb-item active">Trang chủ</li>
+    <li class="breadcrumb-item"><a href="{{ url('/') }}">Trang chủ</a></li>
+    <li class="breadcrumb-item active">Quản lý Bàn</li>
 @endsection
-
 @section('content')
-    <h1>Chào mừng đến với trang chủ!</h1>
-    <p>Đây là trang chủ của ứng dụng quản lý Billiards.</p>
-    <div class="dashboard-stats">
-    <div class="stat-card" id="table-stats">
-    <h3>Bàn đang hoạt động</h3>
-    <div class="value"><span id="active-tables">{{ $activeTables }}</span>/<span id="total-tables">{{ $totalTables }}</span></div>
-    <div class="info">Tỷ lệ sử dụng: <span id="usage-rate">{{ number_format($usageRate, 2) }}</span>%</div>
-</div>
-        <div class="stat-card income">
-          <h3>Doanh thu hôm nay</h3>
-          <div class="value">4.850.000 đ</div>
-          <div class="info up"><i class="fas fa-arrow-up"></i> 12% so với hôm qua</div>
-        </div>
-        <div class="stat-card">
-          <h3>Số giờ chơi</h3>
-          <div class="value">42.5</div>
-          <div class="info"><i class="fas fa-clock"></i> Giờ chơi hôm nay</div>
-        </div>
-        <div class="stat-card">
-          <h3>Khách hàng</h3>
-          <div class="value">32</div>
-          <div class="info up"><i class="fas fa-arrow-up"></i> 8% so với hôm qua</div>
-        </div>
-      </div>
-    
-    <!-- Tables Grid -->
-    <div class="tables-container">
-        <h3>
-          Trạng thái bàn
-            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addReservationModal">
-                <i class="fas fa-calendar-plus"></i> Đặt Bàn
-            </button>
-        </h3>
-        
-        <div class="tables-grid" id="tablesGrid">
-            <!-- Tables will be loaded here by JavaScript -->
-        </div>
-    </div>
-    
-    <!-- Add Reservation Modal -->
-    <div class="modal fade custom-modal" id="addReservationModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="addReservationModalLabel">Đặt Bàn</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+<div class="container-fluid px-4 py-3">
+    <div class="row">
+        <div class="col-lg-8">
+            <!-- Thông tin bàn -->
+            <div class="card mb-3 shadow-sm">
+                <div class="card-header d-flex justify-content-between align-items-center bg-primary text-white">
+                    <strong>Bàn 05 - Pool</strong>
+                    <span>Thời gian bắt đầu: <strong>14:30</strong></span>
                 </div>
-                <div class="modal-body">
-                    <form id="addReservationForm" action="{{ route('reservations.store') }}" method="POST">
-                        @csrf
-                        <div class="mb-3">
-                            <label for="table_id" class="form-label">Chọn Bàn</label>
-                            <select class="form-select" id="table_id" name="table_id" required>
-                                @foreach($availableTables as $table)
-                                <option value="{{ $table->id }}">Bàn số {{ $table->table_number }} - {{ $table->area }}</option>
-                                @endforeach
-                            </select>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p>Thời gian đã chơi: <span class="text-primary fw-bold">2h15p</span></p>
+                            <p>Tổng tiền hiện tại: <span class="text-success fw-bold">350,000 đ</span></p>
                         </div>
+                        <div class="col-md-6 text-end">
+                            <p>Giá/giờ: <span class="text-primary fw-bold">150,000 đ</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-                        <div class="mb-3">
-                            <label for="customer_name" class="form-label">Tên Khách Hàng</label>
-                            <input type="text" class="form-control" id="customer_name" name="customer_name">
-                        </div>
-                        <div class="mb-3">
-                            <label for="customer_phone" class="form-label">Số Điện Thoại</label>
-                            <input type="text" class="form-control" id="customer_phone" name="customer_phone">
-                        </div>
-                        <div class="mb-3">
-                            <label for="customer_email" class="form-label">Email</label>
-                            <input type="email" class="form-control" id="customer_email" name="customer_email">
-                        </div>
+            <!-- Tabs menu -->
+            <ul class="nav nav-tabs mb-3">
+                <li class="nav-item">
+                    <a class="nav-link active" data-bs-toggle="tab" href="#listtables">Danh sách bàn</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-bs-toggle="tab" href="#services">Dịch vụ</a>
+                </li>
+            </ul>
 
-                        <div class="mb-3">
-                            <label for="start_time" class="form-label">Thời gian bắt đầu</label>
-                            <input type="datetime-local" class="form-control" id="start_time" name="start_time" required>
+            <div class="tab-content">
+                <!-- Tab Danh sách bàn -->
+                <div class="tab-pane fade show active" id="listtables">
+                    <div class="row row-cols-2 row-cols-md-3 g-3">
+                        @foreach($tables as $table)
+                        <div class="col">
+                            <div class="card h-100 table-card {{ $table['status_class'] }}">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ $table['name'] }}</h5>
+                                    <p class="card-text">
+                                        <span class="badge {{ $table['status_badge'] }}">
+                                            {{ $table['status_text'] }}
+                                        </span>
+                                    </p>
+                                    <p class="card-text">
+                                        <small>Loại: {{ $table['type'] }}</small><br>
+                                        <small>Khu vực: {{ $table['area'] }}</small><br>
+                                        <small>Giá: {{ number_format($table['price']) }} đ</small>
+                                    </p>
+                                    @if($table['is_available'])
+                                    <button class="btn btn-primary btn-sm start-table" 
+                                            data-table-id="{{ $table['id'] }}"
+                                            data-table-name="{{ $table['name'] }}">
+                                        Bắt đầu
+                                    </button>
+                                    @endif
+                                </div>
+                            </div>
                         </div>
-                        <div class="mb-3">
-                            <label for="end_time" class="form-label">Thời gian kết thúc</label>
-                            <input type="datetime-local" class="form-control" id="end_time" name="end_time">
+                        @endforeach
+                    </div>
+                </div>
+
+                <!-- Tab Dịch vụ -->
+                <div class="tab-pane fade" id="services">
+                    <div class="row row-cols-2 row-cols-md-4 g-3">
+                        @foreach($services as $service)
+                        <div class="col">
+                            <div class="card h-100 service-card">
+                                @if($service->image)
+                                <img src="{{ asset('storage/services/' . $service->image) }}" 
+                                     class="card-img-top" 
+                                     alt="{{ $service->name }}">
+                                @endif
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ $service->name }}</h5>
+                                    <p class="card-text">
+                                        <strong>{{ number_format($service->price) }} đ</strong>
+                                    </p>
+                                    <button class="btn btn-primary btn-sm add-service" 
+                                            data-id="{{ $service->id }}"
+                                            data-name="{{ $service->name }}"
+                                            data-price="{{ $service->price }}">
+                                        Thêm vào giỏ
+                                    </button>
+                                </div>
+                            </div>
                         </div>
-                        <div class="mb-3">
-                            <label for="status" class="form-label">Trạng thái</label>
-                            <select class="form-select" id="status" name="status" required>
-                                <option value="confirmed">Đã xác nhận</option>
-                                <option value="playing">Đang chơi</option>
-                                <option value="completed">Hoàn thành</option>
-                                <option value="cancelled">Đã hủy</option>
-                            </select>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                            <button type="submit" class="btn btn-primary">Đặt Bàn</button>
-                        </div>
-                    </form>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4">
+            <!-- Thông tin bàn -->
+            <div class="card mb-3 shadow-sm">
+                <div class="card-header bg-secondary text-white">Thông tin khách hàng</div>
+                <div class="card-body">
+ư
+                </div>
+            </div>
+
+            <!-- Giỏ hàng -->
+            <div class="card shadow-sm">
+                <div class="card-header bg-success text-white">Giỏ hàng</div>
+                <div class="card-body">
+                </div>
+                <div class="card-footer d-flex justify-content-between">
+                    <button class="btn btn-secondary">In hóa đơn</button>
+                    <button class="btn btn-success">Thanh toán</button>
+                    <button class="btn btn-danger">Kết thúc</button>
                 </div>
             </div>
         </div>
     </div>
-    
+</div>
 @endsection
-@push('styles')
-    <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
-@endpush
-
 @push('scripts')
-    <script>
-         var isHomePage = true;
-        var tablesIndexRoute = "{{ route('tables.data') }}";
-        var tablesStoreRoute = "{{ route('tables.store') }}";
-        var tablesShowRoute = "{{ route('tables.show', ':id') }}";
-        var tablesUpdateRoute = "{{ route('tables.update', ':id') }}";
-        var tablesDestroyRoute = "{{ route('tables.destroy', ':id') }}";
-    </script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="{{ asset('assets/js/tables.js') }}"></script>
+<script>
+    let currentBookingId = {{ $booking->id ?? 'null' }};
+    const routes = {
+        bookingStore: "{{ route('bookings.store') }}",
+        addService: "{{ route('bookings.add-service') }}",
+        checkout: "{{ route('bookings.checkout', ':id') }}",
+        cart: "{{ route('bookings.cart', ':id') }}"
+    };
+</script>   
+<script src="{{ asset('assets/js/booking.js') }}"></script>
 @endpush

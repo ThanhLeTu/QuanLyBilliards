@@ -27,6 +27,7 @@
   <link href="{{ asset('assets/vendor/simple-datatables/style.css') }}" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
   <link href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bootstrap-4/bootstrap-4.css" rel="stylesheet">
+  <link href="{{ asset('css/style.css') }}" rel="stylesheet">
   <!-- Template Main CSS File -->
   <link href="{{ asset('assets/css/style.css') }}" rel="stylesheet">
 
@@ -394,14 +395,7 @@
 
   <main id="main" class="main">
 
-    <div class="pagetitle">
-      <h1>@yield('pagetitle', 'Dashboard')</h1>
-      <nav>
-        <ol class="breadcrumb">
-          @yield('breadcrumb')
-        </ol>
-      </nav>
-    </div><!-- End Page Title -->
+  
 
     <section class="section dashboard">
       @yield('content')

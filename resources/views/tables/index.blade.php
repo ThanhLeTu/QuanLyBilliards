@@ -164,6 +164,7 @@
 
 @push('scripts')
     <script>
+        const isHomePage = {{ request()->is('/') ? 'true' : 'false' }};
         var tablesIndexRoute = "{{ route('tables.data') }}";
         var tablesStoreRoute = "{{ route('tables.store') }}";
         var tablesShowRoute = "{{ route('tables.show', ':id') }}";
