@@ -80,7 +80,7 @@ $(document).ready(function() {
                                 </button>
                             </div>
                                ` : ''}
-                            ${table.status === 'occupied' ? `
+                            ${(table.status === 'occupied' && isHomePage ) ? `
                             <div class="reservation-actions">
                                 <button class="btn btn-success confirm-reservation-btn" data-id="${table.id}">Xác nhận</button>
                                 <button class="btn btn-danger cancel-reservation-btn" data-id="${table.id}">Hủy</button>
@@ -276,6 +276,11 @@ $(document).on('click', '.confirm-reservation-btn', function() {
         }
     });
 
+    $(document).on('click', '.table-card', function () {
+        const tableId = $(this).data('id'); 
+        openBillingModal(tableId);
+    });
+    
     // Initial load
     loadTables();
 

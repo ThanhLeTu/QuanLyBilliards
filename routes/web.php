@@ -26,6 +26,7 @@ Route::patch('/reservations/cancel/{table_id}', [ReservationController::class, '
 Route::patch('/reservations/confirm/{id}', [ReservationController::class, 'confirmReservation']);
 
 Route::get('/table-stats', [HomeController::class, 'getTableStats'])->name('table.stats');
+<<<<<<< HEAD
 
 Route::get('login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('login', [AuthController::class, 'login'])->name('login.post');
@@ -48,3 +49,7 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/profile/update', [AuthController::class, 'updateProfile'])->name('profile.update');
     Route::post('/profile/password', [AuthController::class, 'changePassword'])->name('profile.password');
 });
+=======
+Route::patch('/reservations/confirm/{id}', [ReservationController::class, 'confirmReservation']);
+Route::get('/reservations/customer-by-table/{table_id}', [ReservationController::class, 'getCustomerByTableId']);
+>>>>>>> ThanhLe
