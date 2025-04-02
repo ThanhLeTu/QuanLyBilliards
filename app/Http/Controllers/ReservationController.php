@@ -218,5 +218,32 @@ class ReservationController extends Controller
 
     return response()->json(['message' => 'Bàn đã được xác nhận!']);
 }
+public function getCustomerByTableId($table_id)
+{
+    try {
+        // Tìm đặt bàn theo table_id
+        $reservation = Reservation::where('table_id', $table_id)
+                                  ->whereIn('status', ['confirmed', 'playing']) // Chỉ lấy reservation đang hoạt động
+                                  ->first();
+
+        if (!$reservation) {
+            return response()->json(['success' => false, 'message' => 'Không tìm thấy đặt bàn cho bàn này.'], 404);
+        }
+
+        // Lấy thông tin khách hàng
+        $customer = Customer::find($reservation->customer_id);
+
+        return response()->json([
+            'success' => true,
+            'customer' => $customer
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Lỗi khi lấy thông tin khách hàng.'
+        ], 500);
+    }
+}
+
 
 }

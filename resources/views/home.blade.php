@@ -109,20 +109,127 @@
         </div>
     </div>
     
+
+    <div class="modal fade" id="billingModal" tabindex="-1" aria-labelledby="billingModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-fullscreen">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white d-flex justify-content-between">
+                <div>
+                    <h5 class="modal-title">Bàn 05 - Pool</h5>
+                    <small>Bắt đầu: 14:30 | Giá/giờ: 150,000 đ</small>
+                </div>
+                <div>
+                    <span class="mr-3">Tổng giờ chơi: <strong>2h15p</strong></span>
+                    <span>02:15:37</span>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <!-- Customer Info -->
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-header d-flex justify-content-between">
+                                <span>Thông tin khách hàng</span>
+                                <button class="btn btn-sm btn-outline-secondary">Sửa</button>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <label class="form-label">Tên khách hàng</label>
+                                    <input type="text" class="form-control" name="customer_name" value="">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Số điện thoại</label>
+                                    <input type="tel" class="form-control" name="customer_phone" value="">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Ghi chú</label>
+                                    <textarea class="form-control" name="customer_note" rows="2"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Billing History -->
+                        <div class="card mt-3">
+                            <div class="card-header">Lịch sử gần đây</div>
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between">
+                                    <span>03/03 - Giờ chơi</span>
+                                    <span class="text-success">520,000 đ</span>
+                                </div>
+                                <div class="d-flex justify-content-between mt-2">
+                                    <span>20/02 - Giờ chơi</span>
+                                    <span class="text-success">480,000 đ</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Product Selection -->
+                    <div class="col-md-8">
+                    <div class="service-list-section">
+            <div class="section-header">
+                <h2><i class="fas fa-list"></i> Danh Sách Dịch Vụ</h2>
+                <div class="view-controls">
+                    <button class="view-btn active" data-view="grid">
+                        <i class="fas fa-th"></i>
+                    </button>
+                    <button class="view-btn" data-view="list">
+                        <i class="fas fa-list"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="service-grid" id="serviceGrid">
+                <!-- Services will be loaded here -->
+            </div>
+        </div>
+
+                    </div>
+                </div>
+                <!-- Cart -->
+                <div class="card mt-3">
+                    <div class="card-header bg-info text-white">Giỏ hàng</div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <span>Bia Tiger</span>
+                            <span>2 x 25,000 đ</span>
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between">
+                        <strong>Tổng:</strong>
+                        <span class="text-danger">50,000 đ</span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                <button class="btn btn-primary">Thanh toán</button>
+            </div>
+        </div>
+    </div>
+</div>
+<link rel="stylesheet" href="{{ asset('assets/css/services.css') }}">
 @endsection
 @push('styles')
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
 @endpush
 
 @push('scripts')
-    <script>
-         var isHomePage = true;
-        var tablesIndexRoute = "{{ route('tables.data') }}";
-        var tablesStoreRoute = "{{ route('tables.store') }}";
-        var tablesShowRoute = "{{ route('tables.show', ':id') }}";
-        var tablesUpdateRoute = "{{ route('tables.update', ':id') }}";
-        var tablesDestroyRoute = "{{ route('tables.destroy', ':id') }}";
-    </script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="{{ asset('assets/js/tables.js') }}"></script>
+<script>
+    var isHomePage = true;
+    var tablesIndexRoute = "{{ route('tables.data') }}";
+    var tablesStoreRoute = "{{ route('tables.store') }}";
+    var tablesShowRoute = "{{ route('tables.show', ':id') }}";
+    var tablesUpdateRoute = "{{ route('tables.update', ':id') }}";
+    var tablesDestroyRoute = "{{ route('tables.destroy', ':id') }}";
+    const servicesDataRoute = "{{ route('services.data') }}";
+    const servicesStoreRoute = "{{ route('services.store') }}";
+    const servicesShowRoute = "{{ route('services.show', ':id') }}";
+    const servicesUpdateRoute = "{{ route('services.update', ':id') }}";
+    const servicesDestroyRoute = "{{ route('services.destroy', ':id') }}";
+    
+</script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="{{ asset('assets/js/tables.js') }}"></script>
+<script src="{{ asset('assets/js/services.js') }}"></script>
+<script src="{{ asset('assets/js/custom.js') }}"></script>
+
 @endpush
