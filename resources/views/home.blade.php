@@ -1,4 +1,3 @@
-
 @extends('layouts.app')
 
 @section('title', 'Trang chủ')
@@ -10,6 +9,84 @@
 @endsection
 
 @section('content')
+<style>
+        .timer-display {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        .product-card {
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .category-nav {
+            overflow-x: auto;
+            white-space: nowrap;
+            padding: 10px 0;
+        }
+
+        .table-title {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+        .timer-container {
+            background-color: #0a58ca;
+            border-radius: 6px;
+            padding: 8px 15px;
+            color: white;
+        }
+        .service-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        .cart-item {
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .cart-item:last-child {
+            border-bottom: none;
+        }
+        .cart-total {
+            font-size: 1.2rem;
+            padding: 15px;
+            background-color: #f8f9fa;
+        }
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+        }
+        .sticky-bottom {
+            position: sticky;
+            bottom: 0;
+            background: white;
+            border-top: 1px solid #dee2e6;
+            padding: 15px;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+        }
+        .quantity-control {
+            display: flex;
+            align-items: center;
+        }
+        .quantity-control button {
+            width: 30px;
+            height: 30px;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .quantity-control input {
+            width: 50px;
+            text-align: center;
+        }
+    </style>
     <h1>Chào mừng đến với trang chủ!</h1>
     <p>Đây là trang chủ của ứng dụng quản lý Billiards.</p>
     <div class="dashboard-stats">
@@ -45,7 +122,7 @@
         </h3>
         
         <div class="tables-grid" id="tablesGrid">
-            <!-- Tables will be loaded here by JavaScript -->
+            <!-- Thông tin danh sách bàn được hiển thị ở đây -->
         </div>
     </div>
     
@@ -111,97 +188,154 @@
     
 
     <div class="modal fade" id="billingModal" tabindex="-1" aria-labelledby="billingModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-fullscreen">
+    <div class="modal-dialog modal-fullscreen m-0">
         <div class="modal-content">
-            <div class="modal-header bg-primary text-white d-flex justify-content-between">
-                <div>
-                    <h5 class="modal-title">Bàn 05 - Pool</h5>
-                    <small>Bắt đầu: 14:30 | Giá/giờ: 150,000 đ</small>
-                </div>
-                <div>
-                    <span class="mr-3">Tổng giờ chơi: <strong>2h15p</strong></span>
-                    <span>02:15:37</span>
-                </div>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <!-- Customer Info -->
-                    <div class="col-md-4">
-                        <div class="card">
-                            <div class="card-header d-flex justify-content-between">
-                                <span>Thông tin khách hàng</span>
-                                <button class="btn btn-sm btn-outline-secondary">Sửa</button>
-                            </div>
-                            <div class="card-body">
-                                <div class="mb-3">
-                                    <label class="form-label">Tên khách hàng</label>
-                                    <input type="text" class="form-control" name="customer_name" value="">
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Số điện thoại</label>
-                                    <input type="tel" class="form-control" name="customer_phone" value="">
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Ghi chú</label>
-                                    <textarea class="form-control" name="customer_note" rows="2"></textarea>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Billing History -->
-                        <div class="card mt-3">
-                            <div class="card-header">Lịch sử gần đây</div>
-                            <div class="card-body">
-                                <div class="d-flex justify-content-between">
-                                    <span>03/03 - Giờ chơi</span>
-                                    <span class="text-success">520,000 đ</span>
-                                </div>
-                                <div class="d-flex justify-content-between mt-2">
-                                    <span>20/02 - Giờ chơi</span>
-                                    <span class="text-success">480,000 đ</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Product Selection -->
-                    <div class="col-md-8">
-                    <div class="service-list-section">
-            <div class="section-header">
-                <h2><i class="fas fa-list"></i> Danh Sách Dịch Vụ</h2>
-                <div class="view-controls">
-                    <button class="view-btn active" data-view="grid">
-                        <i class="fas fa-th"></i>
-                    </button>
-                    <button class="view-btn" data-view="list">
-                        <i class="fas fa-list"></i>
-                    </button>
+            <!-- Header with Table Info -->
+        <div class="table-info text-white">
+        <div class="container-fluid">
+        <div class="row align-items-center">
+            <div class="col-md-8" style="color: black;">
+                <h1 class="table-title">Bàn số: <span id="billingTableNumber"></span></h1>
+                <div class="d-flex align-items-center">
+                    <span class="me-3"><i class="far fa-clock"></i> Bắt đầu: <span id="billingStartTime"></span></span>
+                    <span class="me-3"><i class="far fa-clock"></i> Kết thúc: <span id="billingEndTime">Đang chơi</span></span>
+                    <span><i class="fas fa-tag"></i> Giá/giờ: <span id="hourlyRate"></span> đ</span>
                 </div>
             </div>
-            
-            <div class="service-grid" id="serviceGrid">
-                <!-- Services will be loaded here -->
+            <div class="col-md-4 text-md-end">
+                <div class="timer-container">
+                    <div>Thời gian chơi: <strong id="billingDuration"></strong></div>
+                    <div class="timer-display text-red fw-bold" id="billingTotal">0 đ</div>
+                </div>
             </div>
         </div>
+        </div>
+        </div>
+            <!-- Main Content -->
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row g-4">
+                        <!-- Left Column - Customer Info -->
+                        <div class="col-md-4">
+                            <!-- Customer Info Card -->
+                            <div class="card mb-4">
+                                <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                                    <h5 class="mb-0"><i class="fas fa-user me-2"></i>Thông tin khách hàng</h5>
+                                    <button class="btn btn-sm btn-outline-primary">
+                                        <i class="fas fa-edit"></i> Sửa
+                                    </button>
+                                </div>
+                                <div class="card-body">
+                                    <div class="mb-3">
+                                        <label class="form-label">Tên khách hàng</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="fas fa-user-tag"></i></span>
+                                            <input type="text" class="form-control" name="customer_name" placeholder="Nhập tên khách hàng">
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Số điện thoại</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                                            <input type="tel" class="form-control" name="customer_phone" placeholder="0xxx xxx xxx">
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Ghi chú</label>
+                                        <textarea class="form-control" name="customer_note" rows="2" placeholder="Thêm ghi chú cho khách hàng..."></textarea>
+                                    </div>
+                                </div>
+                            </div>
 
-                    </div>
-                </div>
-                <!-- Cart -->
-                <div class="card mt-3">
-                    <div class="card-header bg-info text-white">Giỏ hàng</div>
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between">
-                            <span>Bia Tiger</span>
-                            <span>2 x 25,000 đ</span>
+                            <!-- Cart Preview -->
+                            <div class="card mt-4">
+                                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                                    <h5 class="mb-0"><i class="fas fa-shopping-cart me-2"></i>Giỏ hàng</h5>
+                                    <span class="badge bg-light text-dark" id="cartItemCount">... sản phẩm</span>
+                                </div>
+                                <div class="card-body p-0">
+                                    <ul class="list-group list-group-flush" id="cartItems">
+                                        <li class="list-group-item cart-item d-flex justify-content-between align-items-center">
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="card-footer bg-light">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <div class="text-muted">Tổng thanh toán:</div>
+                                            <div class="fs-5 fw-bold text-danger" id="totalPayment">... đ</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="card-footer d-flex justify-content-between">
-                        <strong>Tổng:</strong>
-                        <span class="text-danger">50,000 đ</span>
+
+                        <!-- Right Column - Products -->
+                        <div class="col-md-8" style="background-color: #0a58ca3d;color: black;">
+                            <!-- Category Navigation -->
+                            <div class="card mb-4">
+                                <div class="card-header bg-light">
+                                    <ul class="nav nav-tabs card-header-tabs category-nav">
+                                        <li class="nav-item">
+                                            <a class="nav-link active" href="#"><i class="fas fa-beer me-1"></i>Đồ uống</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="#"><i class="fas fa-utensils me-1"></i>Đồ ăn</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="#"><i class="fas fa-smoking me-1"></i>Thuốc lá</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="#"><i class="fas fa-th me-1"></i>Khác</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                
+                                <!-- Product Search & View Controls -->
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <div class="input-group" style="max-width: 300px;">
+                                            <span class="input-group-text"><i class="fas fa-search"></i></span>
+                                            <input type="text" class="form-control" placeholder="Tìm kiếm sản phẩm...">
+                                        </div>
+                                        <div class="btn-group">
+                                        </div>
+                                    </div>
+
+                                    <!-- Product Grid -->
+                                    <div class="service-grid" id="serviceGrid">
+                                        <!-- Product Items -->
+                                        <div class="card product-card h-100">
+                                        </div>                                     
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                <button class="btn btn-primary">Thanh toán</button>
+
+            <!-- Footer with Actions -->
+            <div class="sticky-bottom">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                            <button class="btn btn-outline-warning me-2">
+                                <i class="fas fa-pause me-1"></i> Tạm dừng
+                            </button>
+                            <button class="btn btn-outline-info">
+                                <i class="fas fa-print me-1"></i> In hóa đơn
+                            </button>
+                        </div>
+                        <div class="col-md-6 text-md-end">
+                            <button class="btn btn-success btn-lg">
+                                <i class="fas fa-money-bill-wave me-2"></i> Thanh toán
+                                <span class="ms-2 badge bg-light text-dark" id="finalPayment">... đ</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

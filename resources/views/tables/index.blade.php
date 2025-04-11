@@ -20,11 +20,6 @@
             <button class="btn btn-primary add-table-btn" data-bs-toggle="modal" data-bs-target="#addTableModal">
                 <i class="fas fa-plus-circle"></i> Thêm bàn mới
             </button>
-
-            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addReservationModal">
-                <i class="fas fa-calendar-plus"></i> Đặt Bàn
-            </button>
-
         </div>
     </div>
 

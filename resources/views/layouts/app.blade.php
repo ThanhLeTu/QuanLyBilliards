@@ -434,7 +434,8 @@
 
   <!-- Template Main JS File -->
   <script src="{{ asset('assets/js/main.js') }}"></script>
-  
+  <script src="{{ asset('assets/js/services.js') }}"></script>
+  <script src="{{ asset('assets/js/custom.js') }}"></script>
   @stack('scripts')
 </body>
 
