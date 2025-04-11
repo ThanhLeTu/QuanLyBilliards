@@ -26,30 +26,14 @@ Route::patch('/reservations/cancel/{table_id}', [ReservationController::class, '
 Route::patch('/reservations/confirm/{id}', [ReservationController::class, 'confirmReservation']);
 
 Route::get('/table-stats', [HomeController::class, 'getTableStats'])->name('table.stats');
-<<<<<<< HEAD
 
-Route::get('login', [AuthController::class, 'showLoginForm'])->name('login');
-Route::post('login', [AuthController::class, 'login'])->name('login.post');
-
-Route::get('register', [AuthController::class, 'showRegisterForm'])->name('register');
-Route::post('register', [AuthController::class, 'register'])->name('register.post');
-
-Route::post('logout', [AuthController::class, 'logout'])->name('logout');
-
-Route::middleware(['auth'])->group(function () {
-    Route::get('/', [HomeController::class, 'index'])->name('home');
-    Route::get('/tables/data', [TableController::class, 'data'])->name('tables.data');
-    Route::resource('tables', TableController::class);
-    Route::get('/services/data', [ServiceController::class, 'data'])->name('services.data');
-    Route::resource('services', ServiceController::class);
-    Route::resource('reservations', ReservationController::class);
-    Route::patch('/reservations/cancel/{table_id}', [ReservationController::class, 'cancel'])->name('reservations.cancel');
-    Route::patch('/reservations/confirm/{id}', [ReservationController::class, 'confirmReservation']);
-    Route::get('/profile', [AuthController::class, 'profile'])->name('profile');
-    Route::put('/profile/update', [AuthController::class, 'updateProfile'])->name('profile.update');
-    Route::post('/profile/password', [AuthController::class, 'changePassword'])->name('profile.password');
-});
-=======
-Route::patch('/reservations/confirm/{id}', [ReservationController::class, 'confirmReservation']);
-Route::get('/reservations/customer-by-table/{table_id}', [ReservationController::class, 'getCustomerByTableId']);
->>>>>>> ThanhLe
+Route::get('/profile', function () {
+    return view('profile');
+})->name('profile');
+Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
+Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::get('/register', [AuthController::class, 'showRegistrationForm'])->name('register');
+Route::post('/register', [AuthController::class, 'register'])->name('register.submit');
+Route::get('/password/reset', [AuthController::class, 'showResetForm'])->name('password.request');
+Route::post('/password/email', [AuthController::class, 'sendResetLinkEmail'])->name('password.email');      
