@@ -2,6 +2,8 @@
 <html lang="en">
 
 <head>
+  <link rel="stylesheet" href="{{ asset('assets/css/employee.css') }}">
+
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
@@ -296,6 +298,12 @@
         <a class="nav-link" href="{{ route('services.index') }}">
           <i class="bi bi-menu-button-wide"></i><span>Quản lý dịch vụ</span>
         </a>
+      </li>
+      <li class="nav-item">
+          <a class="nav-link" href="{{ route('employees.index') }}">
+              <i class="bi bi-person-badge"></i>
+              <span>Quản lý nhân viên</span>
+          </a>
       </li>
       <li class="nav-item">
         <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
