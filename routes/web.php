@@ -7,6 +7,7 @@ use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\PaymentController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
@@ -55,5 +56,7 @@ Route::middleware(['auth'])->group(function () {
 Route::get('/reservations/playing-info/{table_id}', [ReservationController::class, 'getPlayingInfo']);
 Route::get('/reservations/by-table/{tableId}', [ReservationController::class, 'getByTable']);
 
+Route::post('/payment/momo', [PaymentController::class, 'payWithMomo'])->name('payment.momo');
+Route::get('/payment/momo-callback', [PaymentController::class, 'handleMomoCallback'])->name('payment.momo.callback');
 
 

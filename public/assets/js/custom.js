@@ -54,6 +54,9 @@ function loadReservationInfo(tableId) {
             } else {
                 alert(data.message || 'Không tìm thấy thông tin đặt bàn.');
             }
+            updateCartSummary();
+            updateFinalTotal();
+
         }
         
         
@@ -148,6 +151,7 @@ function updateServerQuantity(serviceId, quantity) {
         }
 
         updateCartSummary();
+        updateFinalTotal();
     });
 
 
@@ -161,6 +165,7 @@ $(document).on('click', '.btn-increase', function () {
     updateCartItemTotal(item, quantity, price);
     updateServerQuantity(item.data('id'), quantity);
     updateCartSummary();
+    updateFinalTotal();//
 });
 
 // Giảm số lượng
@@ -175,6 +180,7 @@ $(document).on('click', '.btn-decrease', function () {
         updateCartItemTotal(item, quantity, price);
         updateServerQuantity(item.data('id'), quantity);
         updateCartSummary();
+        updateFinalTotal();//
     }
 });
 
@@ -185,6 +191,7 @@ $(document).on('click', '.btn-remove', function () {
     item.remove();
     updateServerQuantity(id, 0); // Coi 0 là xóa khỏi reservation
     updateCartSummary();
+    updateFinalTotal(); //
 });
 
 // Tạm patch: Nếu chưa tách file thành công
@@ -219,4 +226,13 @@ function loadServicesForReservation() {
             console.error('Lỗi khi load service modal:', xhr.responseText);
         }
     });
+
+    function updateFinalTotal() {
+        const playCost = parseInt($('#playTimeCost').text().replace(/[^\d]/g, '')) || 0;
+        const cartTotal = parseInt($('#cartTotal').text().replace(/[^\d]/g, '')) || 0;
+        const final = playCost + cartTotal;
+    
+        $('#totalPayment').text(formatPrice(final) + ' đ');
+        $('#finalPayment').text(formatPrice(final) + ' đ');
+    }
 }

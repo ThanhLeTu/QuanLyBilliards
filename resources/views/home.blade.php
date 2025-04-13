@@ -333,6 +333,17 @@
                                 <i class="fas fa-money-bill-wave me-2"></i> Thanh toán
                                 <span class="ms-2 badge bg-light text-dark" id="finalPayment">... đ</span>
                             </button>
+                            <form id="momoForm" method="POST" action="{{ route('payment.momo') }}">
+                                @csrf
+                                <input type="hidden" name="amount" id="momoAmount">
+                                <input type="hidden" name="customer_name" id="momoCustomerName">
+                                <input type="hidden" name="customer_phone" id="momoCustomerPhone">
+                                <input type="hidden" name="reservation_id" id="momoReservationId">
+
+                                <button type="submit" class="btn btn-danger btn-lg mt-2">
+                                    <i class="fab fa-cc-apple-pay me-2"></i> Thanh toán qua Momo
+                                </button>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -365,5 +376,21 @@
 <script src="{{ asset('assets/js/tables.js') }}"></script>
 <script src="{{ asset('assets/js/services.js') }}"></script>
 <script src="{{ asset('assets/js/custom.js') }}"></script>
+<script>
+        $('#momoForm').on('submit', function () {
+        const total = parseInt($('#finalPayment').text().replace(/[^\d]/g, '')) || 0;
+        $('#momoAmount').val(total);
+
+        // 👉 Lấy dữ liệu từ form khách hàng
+        const customerName = $('input[name="customer_name"]').val();
+        const customerPhone = $('input[name="customer_phone"]').val();
+        const reservationId = $('#table_id').val(); // hoặc lưu trong JS từ lúc load
+
+        $('#momoCustomerName').val(customerName);
+        $('#momoCustomerPhone').val(customerPhone);
+        $('#momoReservationId').val(reservationId);
+    });
+</script>
+
 
 @endpush
