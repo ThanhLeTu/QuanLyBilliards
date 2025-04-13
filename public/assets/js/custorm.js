@@ -475,8 +475,10 @@ $('#confirmPaymentBtn').click(function () {
             service_cost: serviceCost,
             total_cost: totalCost,
             services: services
+            
         },
         success: function (response) {
+            console.log('Hi', services);
             if (response.invoice_id) {
                 // Chuyển hướng sang trang hóa đơn
                 window.location.href = `/invoices/${response.invoice_id}`;

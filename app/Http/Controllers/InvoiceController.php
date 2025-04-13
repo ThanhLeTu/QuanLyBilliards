@@ -51,7 +51,7 @@ class InvoiceController extends Controller
 
     public function show($id)
     {
-        $invoice = Invoice::with('services')->findOrFail($id);
+        $invoice = Invoice::with('usedServices')->findOrFail($id);
         return view('invoices.show', compact('invoice'));
     }
     

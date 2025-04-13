@@ -35,11 +35,18 @@ class Invoice extends Model
     {
         return $this->belongsTo(Reservation::class);
     }
-    
-    public function usedServices() // dùng tên khác để phân biệt
+
+    public function usedServices()
     {
         return $this->hasMany(InvoiceService::class);
     }
+    
+    // Trong model Invoice
+public function getServicesAttribute()
+{
+    return $this->usedServices;
+}
+
 
 }
 

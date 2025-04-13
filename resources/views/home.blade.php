@@ -87,31 +87,43 @@
             text-align: center;
         }
     </style>
-    <h1>Chào mừng đến với trang chủ!</h1>
-    <p>Đây là trang chủ của ứng dụng quản lý Billiards.</p>
-    <div class="dashboard-stats">
-    <div class="stat-card" id="table-stats">
-    <h3>Bàn đang hoạt động</h3>
-    <div class="value"><span id="active-tables">{{ $activeTables }}</span>/<span id="total-tables">{{ $totalTables }}</span></div>
-    <div class="info">Tỷ lệ sử dụng: <span id="usage-rate">{{ number_format($usageRate, 2) }}</span>%</div>
-</div>
-        <div class="stat-card income">
-          <h3>Doanh thu hôm nay</h3>
-          <div class="value">4.850.000 đ</div>
-          <div class="info up"><i class="fas fa-arrow-up"></i> 12% so với hôm qua</div>
+    <div class="row">
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Tổng Số Bàn</h5>
+                        <p class="card-text">{{ $totalTables }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Tổng Bàn Đang Chơi</h5>
+                        <p class="card-text">{{ $activeTables }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Tỷ Lệ Sử Dụng Bàn</h5>
+                        <p class="card-text">{{ $usageRate }}%</p>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="stat-card">
-          <h3>Số giờ chơi</h3>
-          <div class="value">42.5</div>
-          <div class="info"><i class="fas fa-clock"></i> Giờ chơi hôm nay</div>
-        </div>
-        <div class="stat-card">
-          <h3>Khách hàng</h3>
-          <div class="value">32</div>
-          <div class="info up"><i class="fas fa-arrow-up"></i> 8% so với hôm qua</div>
-        </div>
-      </div>
-    
+        <div class="col-md-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Tổng Doanh Thu</h5>
+                        <p class="card-text">{{ $totalRevenue }} đ</p>
+                    </div>
+                </div>
+            </div>
+       
     <!-- Tables Grid -->
     <div class="tables-container">
         <h3>
@@ -366,6 +378,33 @@
 <script src="{{ asset('assets/js/tables.js') }}"></script>
 <script src="{{ asset('assets/js/services.js') }}"></script>
 <script src="{{ asset('assets/js/custorm.js') }}"></script>
-
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        var ctx = document.getElementById('revenueChart').getContext('2d');
+        var revenueChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: @json($revenueDates), // Các ngày
+                datasets: [{
+                    label: 'Doanh Thu (VND)',
+                    data: @json($revenueValues), // Doanh thu theo các ngày
+                    borderColor: 'rgb(75, 192, 192)',
+                    borderWidth: 1,
+                    fill: false
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) { return value.toLocaleString(); } // Hiển thị số có dấu phẩy
+                        }
+                    }
+                }
+            }
+        });
+    </script>
 
 @endpush

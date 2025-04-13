@@ -9,6 +9,7 @@ use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ReservationServiceController;
 use App\Http\Controllers\InvoiceController;
+use App\Http\Controllers\DashboardController;
 
 Route::post('/invoices', [InvoiceController::class, 'store']);
 Route::get('/invoices/{id}', [InvoiceController::class, 'show']);
@@ -65,3 +66,4 @@ Route::post('/update-reservation-service', [ReservationServiceController::class,
 Route::delete('/services/{service}', [ServiceController::class, 'destroy'])->name('services.destroy');
 
 
+Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
