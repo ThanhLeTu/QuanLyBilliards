@@ -259,6 +259,7 @@
                                         </li>
                                     </ul>
                                 </div>
+                                <div id="cart-items"></div>
                                 <div class="card-footer bg-light">
                                     <div class="d-flex justify-content-between align-items-center">
                                         <div>
@@ -354,16 +355,16 @@
     var tablesShowRoute = "{{ route('tables.show', ':id') }}";
     var tablesUpdateRoute = "{{ route('tables.update', ':id') }}";
     var tablesDestroyRoute = "{{ route('tables.destroy', ':id') }}";
-    const servicesDataRoute = "{{ route('services.data') }}";
     const servicesStoreRoute = "{{ route('services.store') }}";
     const servicesShowRoute = "{{ route('services.show', ':id') }}";
     const servicesUpdateRoute = "{{ route('services.update', ':id') }}";
     const servicesDestroyRoute = "{{ route('services.destroy', ':id') }}";
-    
+    const servicesDataRoute = "{{ route('services.data') }}";
 </script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="{{ asset('assets/js/tables.js') }}"></script>
 <script src="{{ asset('assets/js/services.js') }}"></script>
-<script src="{{ asset('assets/js/custom.js') }}"></script>
+<script src="{{ asset('assets/js/custorm.js') }}"></script>
+
 
 @endpush

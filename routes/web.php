@@ -7,6 +7,7 @@ use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ReservationServiceController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
@@ -48,12 +49,14 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/profile', [AuthController::class, 'profile'])->name('profile');
     Route::put('/profile/update', [AuthController::class, 'updateProfile'])->name('profile.update');
     Route::post('/profile/password', [AuthController::class, 'changePassword'])->name('profile.password');
-     Route::get('/reservations/customer-by-table/{table_id}', [ReservationController::class, 'getCustomerByTableId']);
-     Route::put('/customers/{customer}', [CustomerController::class, 'update'])->name('customers.update');
+    Route::get('/reservations/customer-by-table/{table_id}', [ReservationController::class, 'getCustomerByTableId']);
+    Route::put('/customers/{customer}', [CustomerController::class, 'update'])->name('customers.update');
 });
 
 Route::get('/reservations/playing-info/{table_id}', [ReservationController::class, 'getPlayingInfo']);
 Route::get('/reservations/by-table/{tableId}', [ReservationController::class, 'getByTable']);
+// routes/web.php hoặc routes/api.php
+Route::post('/update-reservation-service', [ReservationServiceController::class, 'update'])->name('update-reservation-service');
 
 
 
