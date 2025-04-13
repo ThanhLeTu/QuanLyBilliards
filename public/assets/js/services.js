@@ -140,6 +140,52 @@ $(document).ready(function() {
         });
     });
 
+    // Xử lý khi click nút Xóa
+    $('#deleteServiceBtn').click(function() {
+        if (!selectedServiceId) return;
+
+        Swal.fire({
+            title: 'Xác nhận xóa?',
+            text: "Bạn có chắc chắn muốn xóa dịch vụ này?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Xóa',
+            cancelButtonText: 'Hủy'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: servicesDeleteRoute.replace(':id', selectedServiceId),
+                    type: 'DELETE',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function(response) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Đã xóa!',
+                            text: 'Dịch vụ đã được xóa thành công'
+                        }).then(() => {
+                            // Reset form và các trạng thái
+                            resetForm();
+                            // Tải lại danh sách dịch vụ
+                            loadServices();
+                        });
+                    },
+                    error: function(xhr) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Lỗi!',
+                            text: 'Không thể xóa dịch vụ'
+                        });
+                        console.error(xhr.responseText);
+                    }
+                });
+            }
+        });
+    });
+
     // Hàm reset form và trạng thái
     function resetForm() {
         $('#serviceForm')[0].reset();
@@ -187,7 +233,7 @@ $(document).ready(function() {
                                     ${getCategoryName(service.category)}
                                 </div>
                                 <div class="service-price">${formatPrice(service.price)}đ</div>
-                                <p class="service-description">${service.description || 'Không có mô tả'}</p>
+                                <p class="service-description">${service.description ||''}</p>
                             </div>
                         </div>
                     `;

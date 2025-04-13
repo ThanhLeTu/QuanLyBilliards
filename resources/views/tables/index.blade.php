@@ -35,7 +35,6 @@
             <button class="filter-btn" data-status="occupied">
                 <i class="fas fa-user"></i> Đang sử dụng
             </button>
-            
             <button class="filter-btn" data-status="unavailable">
                 <i class="fas fa-ban"></i> Không khả dụng
             </button>
@@ -81,7 +80,7 @@
                         <label for="status" class="form-label">Trạng thái</label>
                         <select class="form-select" id="status" name="status" required>
                             <option value="available">Trống</option>
-                             <option value="occupied">Đang sử dụng</option>
+                            <option value="occupied">Đang sử dụng</option>
                             <option value="unavailable">Không khả dụng</option>
                         </select>
                     </div>
@@ -116,7 +115,7 @@
                         <label for="edit_table_number" class="form-label">Số Bàn</label>
                         <input type="number" class="form-control" id="edit_table_number" name="table_number" required>
                     </div>
-                     <div class="mb-3">
+                    <div class="mb-3">
                         <label for="edit_area" class="form-label">Khu vực</label>
                         <input type="text" class="form-control" id="edit_area" name="area" required>
                     </div>
@@ -132,7 +131,7 @@
                         <label for="edit_status" class="form-label">Trạng thái</label>
                         <select class="form-select" id="edit_status" name="status" required>
                             <option value="available">Trống</option>
-                           <option value="occupied">Đang sử dụng</option>
+                            <option value="occupied">Đang sử dụng</option>
                             <option value="unavailable">Không khả dụng</option>
                         </select>
                     </div>
@@ -149,23 +148,21 @@
         </div>
     </div>
 </div>
-
-
-    
 @endsection
+
 @push('styles')
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
 @endpush
 
 @push('scripts')
-    <script>
+<script>
     var isHomePage = false;
-        var tablesIndexRoute = "{{ route('tables.data') }}";
-        var tablesStoreRoute = "{{ route('tables.store') }}";
-        var tablesShowRoute = "{{ route('tables.show', ':id') }}";
-        var tablesUpdateRoute = "{{ route('tables.update', ':id') }}";
-        var tablesDestroyRoute = "{{ route('tables.destroy', ':id') }}";
-    </script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="{{ asset('assets/js/tables.js') }}"></script>
+    var tablesIndexRoute = "{{ route('tables.data') }}";
+    var tablesStoreRoute = "{{ route('tables.store') }}";
+    var tablesShowRoute = "{{ route('tables.show', ':id') }}";
+    var tablesUpdateRoute = "{{ route('tables.update', ':id') }}";
+    var tablesDestroyRoute = "{{ route('tables.destroy', ':id') }}";
+</script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="{{ asset('assets/js/tables.js') }}"></script>
 @endpush

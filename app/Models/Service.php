@@ -11,10 +11,10 @@ class Service extends Model
 
     protected $fillable = [
         'name',
-        'price',
         'description',
+        'price',
         'image',
-        'category'
+        'status'
     ];
 
     protected $casts = [
@@ -42,5 +42,12 @@ class Service extends Model
     public function reservationServices()
     {
         return $this->hasMany(ReservationService::class);
+    }
+
+    public function bookings()
+    {
+        return $this->belongsToMany(Booking::class, 'booking_services')
+            ->withPivot(['quantity', 'price'])
+            ->withTimestamps();
     }
 }
