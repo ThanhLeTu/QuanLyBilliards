@@ -422,3 +422,69 @@ function loadServicesForReservation() {
         }
     });
 }
+$('#confirmPaymentBtn').click(function () {
+    if (!currentReservationId) return;
+
+    const tableName = $('#billingTableNumber').text().trim(); // Bàn số
+    const startTime = $('#billingStartTime').text().trim();   // Bắt đầu
+    const endTime = $('#billingEndTime').text().trim();       // Kết thúc
+    const duration = $('#billingDuration').text().trim();     // Thời gian chơi
+    const hourlyRate = parseInt($('#hourlyRate').text().replace(/[^\d]/g, '')); // Giá/giờ
+    const tableCost = parseInt($('#billingTotal').text().replace(/[^\d]/g, '')); // Tổng tiền bàn
+
+    const customerName = $('input[name="customer_name"]').val().trim();   // Tên khách hàng
+    const customerPhone = $('input[name="customer_phone"]').val().trim(); // SĐT khách hàng
+    const customerNote = $('textarea[name="customer_note"]').val().trim(); // Ghi chú
+
+    const serviceCost = parseInt($('#cartTotal').data('total')); // Tổng tiền dịch vụ
+    const totalCost = parseInt($('#finalPayment').text().replace(/[^\d]/g, '')); // Tổng thanh toán
+
+    // Dịch vụ trong giỏ hàng
+    const services = [];
+    $('#cartItems .cart-item').each(function () {
+        const serviceId = $(this).data('id');
+        const serviceName = $(this).find('.fw-bold').text().trim();
+        const quantity = parseInt($(this).find('.quantity-input').val());
+        const price = parseInt($(this).data('price'));
+
+        if (quantity > 0) {
+            services.push({
+                service_id: serviceId,
+                name: serviceName,
+                quantity,
+                price
+            });
+        }
+    });
+
+    // Gửi Ajax tạo hóa đơn
+    $.ajax({
+        url: '/invoices',
+        method: 'POST',
+        data: {
+            reservation_id: currentReservationId,
+            customer_name: customerName,
+            customer_phone: customerPhone,
+            customer_note: customerNote,
+            table_name: tableName,
+            start_time: startTime,
+            end_time: endTime,
+            duration: duration,
+            table_price: hourlyRate,
+            table_cost: tableCost,
+            service_cost: serviceCost,
+            total_cost: totalCost,
+            services: services
+        },
+        success: function (response) {
+            if (response.invoice_id) {
+                // Chuyển hướng sang trang hóa đơn
+                window.location.href = `/invoices/${response.invoice_id}`;
+            }
+        },
+        error: function (err) {
+            alert('Lỗi khi tạo hóa đơn!');
+            console.error(err);
+        }
+    });
+});

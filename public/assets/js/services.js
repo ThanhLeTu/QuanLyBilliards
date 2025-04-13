@@ -102,6 +102,36 @@ $(document).ready(function() {
         });
     });
 
+    $('#deleteServiceBtn').click(function () {
+        if (!selectedServiceId) return;
+    
+        Swal.fire({
+            title: 'Bạn chắc chắn?',
+            text: 'Hành động này sẽ xóa dịch vụ vĩnh viễn!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Xóa',
+            cancelButtonText: 'Hủy'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: servicesDeleteRoute.replace(':id', selectedServiceId),
+                    type: 'POST',
+                    data: { _method: 'DELETE' },
+                    success: function (response) {
+                        Swal.fire('Đã xóa!', 'Dịch vụ đã được xóa.', 'success').then(() => {
+                            resetForm();
+                            loadServices();
+                        });
+                    },
+                    error: function (xhr) {
+                        Swal.fire('Lỗi!', 'Không thể xóa dịch vụ.', 'error');
+                        console.error(xhr.responseText);
+                    }
+                });
+            }
+        });
+    });
     // Xử lý khi click nút Cập nhật
     $('#editServiceBtn').click(function() {
         if (!selectedServiceId) return;

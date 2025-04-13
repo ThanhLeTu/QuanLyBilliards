@@ -43,4 +43,8 @@ class Service extends Model
     {
         return $this->hasMany(ReservationService::class);
     }
+    public function invoice()
+    {
+        return $this->belongsTo(Invoice::class);
+    }
 }

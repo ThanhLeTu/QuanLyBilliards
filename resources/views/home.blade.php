@@ -330,10 +330,11 @@
                             </button>
                         </div>
                         <div class="col-md-6 text-md-end">
-                            <button class="btn btn-success btn-lg">
+                        <span id="cartTotal" data-total="{{ $tongTienDichVu ?? 0 }}">{{ number_format($tongTienDichVu ?? 0) }} đ</span>
+                            <button class="btn btn-success btn-lg" id="confirmPaymentBtn">
                                 <i class="fas fa-money-bill-wave me-2"></i> Thanh toán
                                 <span class="ms-2 badge bg-light text-dark" id="finalPayment">... đ</span>
-                            </button>
+                               </button>
                         </div>
                     </div>
                 </div>

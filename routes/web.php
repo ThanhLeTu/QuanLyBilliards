@@ -8,6 +8,11 @@ use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ReservationServiceController;
+use App\Http\Controllers\InvoiceController;
+
+Route::post('/invoices', [InvoiceController::class, 'store']);
+Route::get('/invoices/{id}', [InvoiceController::class, 'show']);
+
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
@@ -57,6 +62,6 @@ Route::get('/reservations/playing-info/{table_id}', [ReservationController::clas
 Route::get('/reservations/by-table/{tableId}', [ReservationController::class, 'getByTable']);
 // routes/web.php hoặc routes/api.php
 Route::post('/update-reservation-service', [ReservationServiceController::class, 'update'])->name('update-reservation-service');
-
+Route::delete('/services/{service}', [ServiceController::class, 'destroy'])->name('services.destroy');
 
 
