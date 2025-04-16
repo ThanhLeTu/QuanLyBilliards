@@ -10,6 +10,8 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ReservationServiceController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\EmployeeController;
 
 Route::post('/invoices', [InvoiceController::class, 'store']);
 Route::get('/invoices/{id}', [InvoiceController::class, 'show']);
@@ -67,3 +69,9 @@ Route::delete('/services/{service}', [ServiceController::class, 'destroy'])->nam
 
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
+
+Route::post('/payment/momo', [PaymentController::class, 'createMomoPayment'])->name('payment.momo');
+Route::get('/payment/momo-return', [PaymentController::class, 'momoReturn'])->name('payment.momoReturn');
+Route::get('/invoices/{invoice}', [InvoiceController::class, 'show'])->name('invoices.show');
+
+Route::resource('employees', EmployeeController::class);

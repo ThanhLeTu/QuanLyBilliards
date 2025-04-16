@@ -346,7 +346,23 @@
                             <button class="btn btn-success btn-lg" id="confirmPaymentBtn">
                                 <i class="fas fa-money-bill-wave me-2"></i> Thanh toán
                                 <span class="ms-2 badge bg-light text-dark" id="finalPayment">... đ</span>
-                               </button>
+                            </button>
+                            <form id="momoForm" method="POST" action="{{ route('payment.momo') }}">
+                                @csrf
+                                <input type="hidden" name="amount" id="momoAmount">
+                                <input type="hidden" name="reservation_id" id="momoReservationId">
+                                <input type="hidden" name="customer_name" id="momoCustomerName">
+                                <input type="hidden" name="customer_phone" id="momoCustomerPhone">
+                                <input type="hidden" name="customer_note" id="momoCustomerNote">
+                                <input type="hidden" name="table_name" id="momoTableName">
+                                <input type="hidden" name="table_price" id="momoTablePrice">
+                                <input type="hidden" name="play_cost" id="momoPlayCost">
+                                <input type="hidden" name="service_cost" id="momoServiceCost">
+
+                                <button type="submit" class="btn btn-danger btn-lg mt-2">
+                                    <i class="fab fa-cc-apple-pay me-2"></i> Thanh toán qua Momo
+                                </button>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -406,5 +422,20 @@
             }
         });
     </script>
+    <script>
+        // THÊM Ở ĐÂY
+        $('#momoForm').on('submit', function () {
+            const total = parseInt($('#finalPayment').text().replace(/[^\d]/g, '')) || 0;
+            $('#momoAmount').val(total);
 
+            $('#momoReservationId').val(currentReservationId);
+            $('#momoCustomerName').val($('input[name="customer_name"]').val());
+            $('#momoCustomerPhone').val($('input[name="customer_phone"]').val());
+            $('#momoCustomerNote').val($('textarea[name="customer_note"]').val());
+            $('#momoTableName').val($('#billingTableNumber').text().trim());
+            $('#momoTablePrice').val(parseInt($('#hourlyRate').text().replace(/[^\d]/g, '')) || 0);
+            $('#momoPlayCost').val(parseInt($('#billingTotal').text().replace(/[^\d]/g, '')) || 0);
+            $('#momoServiceCost').val(parseInt($('#cartTotal').data('total')) || 0);
+        });
+    </script>
 @endpush
