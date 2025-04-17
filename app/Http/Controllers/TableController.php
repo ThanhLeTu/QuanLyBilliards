@@ -16,9 +16,12 @@ class TableController extends Controller
      */
     public function index()
     {
+
         $tables = Table::all(); // Fetch all tables from the database
         return view('tables.index', compact('tables')); // Pass the tables to the view
+
     }
+    
 
     /**
      * Display a listing of the resource for dataTables.
@@ -55,7 +58,9 @@ class TableController extends Controller
             return response()->json($table, 201);
         } catch (\Exception $e) {
             Log::error("Lỗi khi tạo bàn: " . $e->getMessage() . "\n" . $e->getTraceAsString());
+
             return response()->json(['message' => 'Bàn đã tồn tại!'], 500);
+
         }
     }
     /**

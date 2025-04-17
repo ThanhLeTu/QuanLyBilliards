@@ -26,6 +26,7 @@ Route::resource('tables', TableController::class);
 // Services routes (follow same pattern as tables)
 Route::get('/services/data', [ServiceController::class, 'data'])->name('services.data');
 Route::resource('services', ServiceController::class);
+Route::delete('/services/{id}', [ServiceController::class, 'destroy'])->name('services.destroy');
 
 // Reservations routes
 Route::get('/reservations/data', [ReservationController::class, 'data'])->name('reservations.data');
