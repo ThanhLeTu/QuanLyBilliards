@@ -2,6 +2,8 @@
 <html lang="en">
 
 <head>
+  <link rel="stylesheet" href="{{ asset('assets/css/employee.css') }}">
+
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
@@ -31,6 +33,7 @@
   <link href="{{ asset('assets/vendor/simple-datatables/style.css') }}" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
   <link href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bootstrap-4/bootstrap-4.css" rel="stylesheet">
+  <link href="{{ asset('css/style.css') }}" rel="stylesheet">
   <!-- Template Main CSS File -->
   <link href="{{ asset('assets/css/style.css') }}" rel="stylesheet">
 
@@ -230,10 +233,10 @@
             </li>
 
             <li>
-  <a class="dropdown-item d-flex align-items-center" href="{{ route('profile') }}">
-    <i class="bi bi-person"></i>
-    <span>My Profile</span>
-  </a>
+          <a class="dropdown-item d-flex align-items-center" href="{{ route('profile') }}">
+            <i class="bi bi-person"></i>
+            <span>My Profile</span>
+          </a>
 </li>
             <li>
               <hr class="dropdown-divider">
@@ -306,6 +309,12 @@
         <a class="nav-link" href="{{ route('services.index') }}">
           <i class="bi bi-menu-button-wide"></i><span>Quản lý dịch vụ</span>
         </a>
+      </li>
+      <li class="nav-item">
+          <a class="nav-link" href="{{ route('employees.index') }}">
+              <i class="bi bi-person-badge"></i>
+              <span>Quản lý nhân viên</span>
+          </a>
       </li>
       <li class="nav-item">
         <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
@@ -405,14 +414,7 @@
 
   <main id="main" class="main">
 
-    <div class="pagetitle">
-      <h1>@yield('pagetitle', 'Dashboard')</h1>
-      <nav>
-        <ol class="breadcrumb">
-          @yield('breadcrumb')
-        </ol>
-      </nav>
-    </div><!-- End Page Title -->
+  
 
     <section class="section dashboard">
       @yield('content')
@@ -434,7 +436,8 @@
 
   <!-- Template Main JS File -->
   <script src="{{ asset('assets/js/main.js') }}"></script>
-  
+  <script src="{{ asset('assets/js/services.js') }}"></script>
+  <script src="{{ asset('assets/js/custom.js') }}"></script>
   @stack('scripts')
 </body>
 

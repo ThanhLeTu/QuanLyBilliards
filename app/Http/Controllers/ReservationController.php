@@ -218,32 +218,56 @@ class ReservationController extends Controller
 
     return response()->json(['message' => 'Bàn đã được xác nhận!']);
 }
-public function getCustomerByTableId($table_id)
-{
-    try {
-        // Tìm đặt bàn theo table_id
-        $reservation = Reservation::where('table_id', $table_id)
-                                  ->whereIn('status', ['confirmed', 'playing']) // Chỉ lấy reservation đang hoạt động
-                                  ->first();
+    public function getCustomerByTableId($table_id)
+    {
+        try {
+            $reservation = Reservation::where('table_id', $table_id)
+                                    ->whereIn('status', ['confirmed', 'playing'])
+                                    ->first();
 
-        if (!$reservation) {
-            return response()->json(['success' => false, 'message' => 'Không tìm thấy đặt bàn cho bàn này.'], 404);
+            if (!$reservation) {
+                return response()->json(['success' => false, 'message' => 'Không tìm thấy đặt bàn cho bàn này.'], 404);
+            }
+
+            $customer = Customer::find($reservation->customer_id);
+            $table = Table::find($reservation->table_id);
+
+            return response()->json([
+                'success' => true,
+                'customer' => $customer,
+                'reservation' => [
+                    'start_time' => $reservation->start_time,
+                    'end_time' => $reservation->end_time,
+                    'status' => $reservation->status,
+                    'hourly_rate' => $table->price_per_hour, // <-- lấy từ model Table
+                ]
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Lỗi khi lấy thông tin khách hàng.'
+            ], 500);
         }
-
-        // Lấy thông tin khách hàng
-        $customer = Customer::find($reservation->customer_id);
-
+    }
+    public function getByTable($tableId)
+    {
+        $reservation = Reservation::where('table_id', $tableId)
+            ->whereIn('status', ['confirmed', 'playing']) // <-- Thay vì whereNull('end_time')
+            ->with(['customer', 'table'])
+            ->latest()
+            ->first();
+    
+        if (!$reservation) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Không tìm thấy thông tin đặt bàn.'
+            ]);
+        }
+    
         return response()->json([
             'success' => true,
-            'customer' => $customer
+            'reservation' => $reservation
         ]);
-    } catch (\Exception $e) {
-        return response()->json([
-            'success' => false,
-            'message' => 'Lỗi khi lấy thông tin khách hàng.'
-        ], 500);
     }
-}
-
-
+    
 }

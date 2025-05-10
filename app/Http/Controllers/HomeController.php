@@ -4,6 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Reservation;
 use App\Models\Table;
+use App\Models\Service;
+use App\Models\ReservationService;
+use App\Models\Booking;
+use App\Models\BookingService;
+
 use Illuminate\Http\Request;
 class HomeController extends Controller
 {
@@ -24,14 +29,49 @@ class HomeController extends Controller
 
     public function index()
     {
-        // Lấy số liệu thống kê bàn
-        $stats = $this->calculateTableStats();
-        
-        // Lấy danh sách tất cả các bàn
-        $tables = Table::all(); 
-        $availableTables = Table::where('status', 'available')->get();
-        
-        return view('home', compact('tables', 'availableTables') + $stats);
+        $tables = Table::all()->map(function($table) {
+            $statusMap = [
+                'available' => [
+                    'class' => 'border-success',
+                    'badge' => 'bg-success',
+                    'text' => 'Trống'
+                ],
+                'occupied' => [
+                    'class' => 'border-warning',
+                    'badge' => 'bg-warning',
+                    'text' => 'Đang sử dụng'
+                ],
+                'unavailable' => [
+                    'class' => 'border-danger',
+                    'badge' => 'bg-danger',
+                    'text' => 'Không khả dụng'
+                ]
+            ];
+
+            $status = $statusMap[$table->status] ?? [
+                'class' => '',
+                'badge' => 'bg-secondary',
+                'text' => 'Không xác định'
+            ];
+
+            return [
+                'id' => $table->id,
+                'name' => "Bàn {$table->table_number}",
+                'type' => $table->table_type,
+                'area' => $table->area,
+                'price' => $table->price,
+                'description' => $table->description,
+                'status_class' => $status['class'],
+                'status_badge' => $status['badge'],
+                'status_text' => $status['text'],
+                'is_available' => $table->status === 'available'
+            ];
+        });
+
+        $services = Service::all();
+        $booking = null; // Or fetch active booking if exists
+
+        return view('home', compact('tables', 'services', 'booking'));
     }
 
     // API để lấy dữ liệu bàn mà không cần load lại trang
